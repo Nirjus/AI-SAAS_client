@@ -6,12 +6,30 @@
 ::-webkit-scrollbar{
     width: 8px;
   }
-  ::-webkit-scrollbar-thumb{
-    background: #f5f5f5b0;
+
+.sideBaranimationRightToleft{
+  transition: all;
+  animation: rightToleft 500ms ease-in-out ;
+}
+
+@keyframes rightToleft{
+  0%{
+    transform: translateX(100%);
   }
-  ::-webkit-scrollbar-track{
-    background: #8317c6;
+  100%{
+    transform: translateX(0%);
   }
-  ::-webkit-scrollbar-thumb:hover{
-    background: #4c0e7e;
+}
+
+.sideBaranimationLeftToRight{
+  transition: all;
+  animation: leftToRight 500ms ease-in-out;
+}
+@keyframes leftToRight{
+  0%{
+    transform: translateX(0%);
   }
+  100%{
+    transform: translateX(100%);
+  }
+}

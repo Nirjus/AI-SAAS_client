@@ -20,6 +20,7 @@ const Page: FC<Props> = ({}) => {
       />
       <Header
         activeItem={activeItem}
+        setActiveItem={setActiveItem}
         open={open}
         setOpen={setOpen}
         route={route}

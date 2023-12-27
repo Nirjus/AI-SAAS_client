@@ -26,6 +26,7 @@ const config: Config = {
         "1400px": "1400px",
         "1500px": "1500px",
         "800px": "800px",
+        "600px": "600px",
         "400px": "400px"
       }
     },

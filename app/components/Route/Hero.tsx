@@ -8,7 +8,7 @@ type Props = {}
 const Hero = (props: Props) => {
     
   return (
-    <div className="w-full min-h-[95vh] h-auto 1000px:flex items-center">
+    <div className="w-full h-auto 1000px:flex items-center">
         
   </div>
   )

@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar/Navbar";
 import Image from "next/image";
 
 type Props = {
+  setActiveItem?: any;
   activeItem: number;
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -11,7 +12,7 @@ type Props = {
   setRoute: (route: string) => void;
 };
 
-const Header = ({ activeItem, open, setOpen, route, setRoute }: Props) => {
+const Header = ({ activeItem, setActiveItem,open, setOpen, route, setRoute }: Props) => {
   const [active, setActive] = useState(false);
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {
@@ -42,6 +43,7 @@ const Header = ({ activeItem, open, setOpen, route, setRoute }: Props) => {
           <div className=" flex flex-row items-center">
             <Navbar
               activeItem={activeItem}
+              setActiveItem={setActiveItem}
               open={open}
               setOpen={setOpen}
               route={route}

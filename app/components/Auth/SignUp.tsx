@@ -3,12 +3,12 @@ import { style } from '@/app/styles/style';
 import React, { useEffect, useState } from 'react'
 import {AiOutlineEye, AiOutlineEyeInvisible} from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
-import { FaFacebook } from "react-icons/fa";
 import { SiGithub } from "react-icons/si";
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import { useRegisterMutation } from '@/redux/features/auth/authApi';
 import toast from 'react-hot-toast';
+import { signIn } from 'next-auth/react';
 
 type Props = {
     setRoute: (route: string) => void;
@@ -113,28 +113,29 @@ const SignUp = ({setRoute, setOpen}: Props) => {
         )
       }
      <div className=' py-5 flex justify-between px-1'>
-      <button type="submit" className=' p-2 min-w-[90px] text-white bg-black rounded-[3px] active:scale-90 duration-200'>
+      <button type="submit" className=' p-2 min-w-[90px] text-white dark:bg-[#6912cd] bg-black rounded-[3px] active:scale-90 duration-200'>
         Register
       </button>
      </div>
      <div className=''>
       
          <p className=' text-center'>---------------- or Join with ----------------</p>
-         <div className=' flex gap-5 justify-center pt-6'>
-      <div className=' p-[5px] w-[80px] cursor-pointer flex justify-center items-center rounded border-[#7e7e7e7d] border bg-[#0d0d0d1e]'>
-      <FcGoogle size={30}/>
+         <div className=' flex gap-7 justify-center pt-6'>
+      <div className=' p-[5px] w-[80px] cursor-pointer flex justify-center items-center rounded border-[#7e7e7e7d] border bg-[#0d0d0d1e] active:bg-[#0d0d0d2f]'
+      onClick={() => signIn("google")}
+      >
+      <FcGoogle size={30} />
       </div>
-      <div className=' p-[5px] w-[80px] cursor-pointer flex justify-center items-center rounded border-[#7e7e7e7d] border bg-[#0d0d0d1e]'>
-          <FaFacebook size={30} color={"blue"}/>
-          </div>
-          <div className=' p-[5px] w-[80px] cursor-pointer flex justify-center items-center rounded border-[#7e7e7e7d] border bg-[#0d0d0d1e]'>
+          <div className=' p-[5px] w-[80px] cursor-pointer flex justify-center items-center rounded border-[#7e7e7e7d] border bg-[#0d0d0d1e] active:bg-[#0d0d0d2f]'
+          onClick={() => signIn("github")}
+          >
           <SiGithub size={28}/>
           </div>
          </div>
      </div>
      <div className=' pt-7'>
-      <p className=' text-center text-black dark:text-white'>
-        already have any account? <span onClick={() => setRoute("Login")} className=' cursor-pointer underline'>SignIn</span>
+      <p className=' text-center text-[#000000a2] dark:text-[#ffffff78]'>
+        already have any account? <span onClick={() => setRoute("Login")} className=' cursor-pointer text-black dark:text-white'>SignIn</span>
       </p>
      </div>
        </form>
