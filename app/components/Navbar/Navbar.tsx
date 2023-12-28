@@ -28,7 +28,7 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
   const [logout, setLogout] = useState(false);
   const {user} = useSelector((state:any) => state.auth);
   const [socialAuth,{isSuccess,data:socialData, error}] = useSocialAuthMutation();
-  const {} = useLogOutQuery(undefined,{skip: logout ? false : true});
+  // const {} = useLogOutQuery(undefined,{skip: logout ? false : true});
     const {data} = useSession();
 
    const sideBar = (e:any) => {
@@ -40,21 +40,28 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
         }
    }
    useEffect(() => {
-    if(!user && data){
+    if(!user){
+      if(data){
        socialAuth({
         email:data?.user?.email,
         name: data?.user?.name,
         socialAvatar: data?.user?.image
        })
+      }
     }
-    if(data === null && isSuccess){
+    if(data === null){
+      if(isSuccess){
       const message = socialData?.message || "Login Successfully"
       toast.success(message);
     }
-     if(data === null){
-      setLogout(true);
-     }
-   },[data, user, socialAuth, socialData, isSuccess])
+  }
+   if(error){
+    if("data" in error){
+      const errorData = error as any;
+      toast.error(errorData?.data.message);
+    }
+   }
+   },[data, user, socialAuth, socialData, isSuccess, error])
 
   const navItem = [
     {

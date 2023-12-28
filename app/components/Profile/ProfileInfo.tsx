@@ -6,6 +6,7 @@ import { IoCameraOutline } from "react-icons/io5";
 import { useUpdateUserMutation } from "@/redux/features/user/userApi";
 import toast from "react-hot-toast";
 import { useLoaduserQuery } from "@/redux/features/api/apiSlice";
+import { RxCross1 } from "react-icons/rx";
 
 type Props = {
   user: any;
@@ -13,6 +14,7 @@ type Props = {
 
 const ProfileInfo = ({ user }: Props) => {
   const [name, setName] = useState(user?.name);
+  const [zoomIn, setZoomIn] = useState(false);
   const [address, setAddress] = useState(user?.address);
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber);
   const [image, setImage] = useState<any>(null);
@@ -74,6 +76,7 @@ const ProfileInfo = ({ user }: Props) => {
               width={500}
               height={500}
               className=" w-[150px] h-[150px] rounded-full border-[2px] border-[#12c2d2] object-cover"
+              onClick={() => setZoomIn(true)}
             />
           )}
           <label
@@ -130,6 +133,23 @@ const ProfileInfo = ({ user }: Props) => {
          </div>
         </div>
       </form>
+      {
+        zoomIn && (
+          <div className=" w-full z-[9999] h-screen fixed top-0 left-0 bg-[#16161649]">
+              <div className=" p-1 rounded-[10px] bg-[#e7e3e3] dark:bg-[#2c2947] fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 ">
+                <div className=" flex justify-end"><RxCross1 size={25} className=" text-black dark:text-white  cursor-pointer" onClick={() => setZoomIn(false)}/></div>
+                   <Image src={ user?.avatar
+                  ? user?.avatar?.url
+                  : user?.socialAvatar
+                  ? user?.socialAvatar
+                  : avatar} alt="Avatar"
+                   width={1000} height={1000}
+                   className=" 1000px:w-[600px] 1000px:h-[650px] 800px:w-[400px] 800px:h-[450px] w-[250px] h-[300px] object-cover rounded"
+                   />
+              </div>
+          </div>
+        )
+      }
     </div>
   );
 };

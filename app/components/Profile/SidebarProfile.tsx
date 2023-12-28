@@ -1,30 +1,20 @@
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import avatar from "../../../public/images/avatar.png";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdLogout, MdOutlinePersonRemove, MdOutlineSubscriptions } from "react-icons/md";
 import {HiOutlineSaveAs} from "react-icons/hi";
-import { useLogOutQuery } from "@/redux/features/auth/authApi";
-import { signOut } from "next-auth/react";
-import toast from "react-hot-toast";
 
 type Props = {
   user: any;
   active: number;
   setActive: (active: number) => void;
   setOpen: (open: boolean) => void;
+  logoutHandler: any;
 };
 
-const SidebarProfile = ({ user, active, setActive, setOpen }: Props) => {
-    const [logout, setLogout] = useState(false);
-    const {} = useLogOutQuery(undefined,{
-        skip: logout ? false : true
-    });
-    const logOutHandler = async () => {
-            setLogout(true);
-           await signOut();
-           toast.success("Logout successful")
-    }
+const SidebarProfile = ({ user, active, setActive, setOpen, logoutHandler }: Props) => {
+ 
   return (
     <div className=" w-full font-Poppins bg-white dark:bg-[#290329] border border-[#8382827b]">
       <div
@@ -87,7 +77,7 @@ const SidebarProfile = ({ user, active, setActive, setOpen }: Props) => {
         className={`flex p-2 items-center gap-3 cursor-pointer rounded ${
           active === 5 ? "bg-[#0000002c] dark:bg-[#ffffff23]" : "bg-transparent"
         }`}
-        onClick={() => {setActive(5), logOutHandler()}}
+        onClick={() => {setActive(5), logoutHandler()}}
       >
         <MdLogout size={30} className=" text-[#df6478]" />
         <p className=" text-black dark:text-white font-[600] 800px:block hidden text-[18px]">
