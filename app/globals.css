@@ -33,7 +33,18 @@
     transform: translateX(100%);
   }
 }
-
+.textComingAnimation{
+  transition: all;
+  animation: comingText 400ms ease-in-out;
+}
+@keyframes comingText{
+  0%{
+   display:none;
+  }
+  100%{
+   display: none;
+  }
+}
 .animationNavebar{
   transition: all;
   animation: upToDown 500ms ease-in-out;

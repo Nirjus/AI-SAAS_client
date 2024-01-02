@@ -5,11 +5,9 @@ type Props = {}
 
 const Loader = (props: Props) => {
   return (
-    <div className=' w-full h-screen flex justify-center  items-center'>
-      <div className=' w-[100px] '>
+      <div className=' w-[100px] h-[100px]'>
       <Lottie animationData={animation} loop={true} />
       </div>
-    </div>
   )
 }
 
