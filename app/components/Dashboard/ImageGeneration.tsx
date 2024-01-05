@@ -6,6 +6,7 @@ import {
   Download,
   Eye,
   ImageIcon,
+  Sparkles,
   X,
 } from "lucide-react";
 import Image from "next/image";
@@ -19,10 +20,13 @@ import {
 } from "@/redux/features/image/imageApi";
 import { getRandomPrompts } from "@/app/utils/Prompts/randomPrompts";
 import FileSaver from "file-saver";
+import { maxCreditCount } from "@/app/utils/constants";
+import { useGetCreditCountQuery } from "@/redux/features/user/userApi";
 
 type Props = {
   setOpen: any;
   setRoute: any;
+  refetchCredit: any;
 };
 interface IImageProps {
   i: any;
@@ -32,7 +36,7 @@ interface IImageProps {
   width: string;
 }
 
-const ImageGeneration = ({ setOpen, setRoute }: Props) => {
+const ImageGeneration = ({ setOpen, setRoute, refetchCredit }: Props) => {
   const [image, setImage] = useState("");
   const [num, setNum] = useState<number>();
   const [vusial, setVusial] = useState([]);
@@ -46,6 +50,7 @@ const ImageGeneration = ({ setOpen, setRoute }: Props) => {
     { refetchOnMountOrArgChange: true }
   );
   const { user } = useSelector((state: any) => state.auth);
+  const {data: creditData} = useGetCreditCountQuery({});
  
   const numArray = [1, 2, 3, 4];
   const handleSubmit = async (e: any) => {
@@ -63,6 +68,7 @@ const ImageGeneration = ({ setOpen, setRoute }: Props) => {
   useEffect(() => {
     if (isSuccess) {
       refetch();
+      refetchCredit();
     }
     if (error) {
       if ("data" in error) {
@@ -73,7 +79,11 @@ const ImageGeneration = ({ setOpen, setRoute }: Props) => {
     if (data) {
       setVusial(data?.images);
     }
-  }, [data, isSuccess, error, refetch]);
+    if(creditData?.credit === maxCreditCount){
+      setOpen(true);
+      setRoute("pro-modal");
+    }
+  }, [data, isSuccess, error, refetch, refetchCredit, creditData, setOpen, setRoute]);
    const handleSurpriseMe = () => {
     const randomPrompt = getRandomPrompts(image);
      setImage(randomPrompt);
@@ -92,7 +102,8 @@ const ImageGeneration = ({ setOpen, setRoute }: Props) => {
       <div className="px-4 lg:px-8">
         <form action="" onSubmit={handleSubmit} className=" w-full  rounded-lg">
           <div className=" w-full flex flex-col justify-between lg:gap-10 md:gap-6">
-            <textarea
+           <div className="flex">
+           <textarea
               name="prompt"
               cols={30}
               rows={1}
@@ -101,7 +112,13 @@ const ImageGeneration = ({ setOpen, setRoute }: Props) => {
               onChange={(e) => setImage(e.target.value)}
               className={` ${style.input} dark:!bg-[#2f0936] !w-full h-fit`}
             ></textarea>
-            <div className=" w-full flex 600px:flex-row flex-col justify-between items-center">
+            <div className=" cursor-pointer bg-gray-200 p-3 rounded-r-[5px] text-[14px] dark:bg-[#2f0936] text-center"
+            onClick={() => handleSurpriseMe()}
+            >
+              <Sparkles />
+            </div>
+           </div>
+            <div className=" w-full 800px:flex justify-between items-center">
               <select
                 name=""
                 id=""
@@ -116,15 +133,6 @@ const ImageGeneration = ({ setOpen, setRoute }: Props) => {
                   </option>
                 ))}
               </select>
-              <div className=" 800px:mt-0 mt-[30px]">
-                <button onClick={() => handleSurpriseMe() } type="button"
-                className={`active:scale-90 duration-300 text-white p-2 w-full  rounded ${
-                  isLoading ? " bg-gray-600" : "bg-[#985ad5]"
-                } `}
-                >
-                  Get Prompt
-                </button>
-              </div>
               <div className=" 800px:mt-0 mt-[30px]">
                 <button
                   type="submit"
@@ -147,11 +155,12 @@ const ImageGeneration = ({ setOpen, setRoute }: Props) => {
             <Loader />
           </div>
         )}
-        {!image && !isLoading && (
+       <div className={`${!imageData && " min-h-[300px]"}`}>
+       {!image && !isLoading && (
           <div className=" w-full flex flex-col justify-center items-center">
             <Image
               src={require("../../../public/images/photoIcon2.png")}
-              alt="Girl standing"
+              alt="photo gallary"
               width={500}
               height={500}
               className=" w-[300px] h-[300px] rotate-[30deg] object-contain"
@@ -161,6 +170,7 @@ const ImageGeneration = ({ setOpen, setRoute }: Props) => {
             </p>
           </div>
         )}
+       </div>
 
         <div className=" flex gap-4 flex-wrap">
           {imageData &&
@@ -169,7 +179,7 @@ const ImageGeneration = ({ setOpen, setRoute }: Props) => {
             ))}
         </div>
       </div>
-      <div className=" h-fit w-fit mt-4 800px:p-8 p-3 rounded-[30px] bg-[#cacaca47] dark:bg-[#0000005e] ">
+      <div className=" h-fit w-fit  800px:p-8 p-3 rounded-[30px] bg-[#cacaca47] dark:bg-[#0000005e] ">
         <div className=" flex gap-5 items-center">
           <p className=" pl-2 800px:text-[21px] text-[18px] font-Poppins font-semibold text-black dark:text-white">
             List of images you generated

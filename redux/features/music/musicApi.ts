@@ -3,11 +3,11 @@ import { apiSlice } from "../api/apiSlice";
 export const musicApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         createMusic: builder.mutation({
-            query: (prompt) => ({
+            query: ({prompt,duration, format}) => ({
                 url: "music/create-music",
                 method: "POST",
                body:{
-                prompt
+                prompt, duration, format
                },
                credentials: "include" as const,
             })

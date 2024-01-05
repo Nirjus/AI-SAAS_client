@@ -49,6 +49,13 @@ export const userApi = apiSlice.injectEndpoints({
                 credentials: "include" as const,
             })
         }),
+        getCreditCount: builder.query({
+            query: () => ({
+                url: "user/credit-count",
+                method: "GET",
+                credentials: "include" as const
+            })
+        }),
     })
 })
 export const {
@@ -57,4 +64,5 @@ export const {
   useResetPasswordMutation,
   useUpdatePasswordMutation,
   useDeleteUserMutation,
+  useGetCreditCountQuery
 } = userApi

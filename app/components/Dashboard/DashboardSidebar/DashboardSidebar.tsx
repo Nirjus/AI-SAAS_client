@@ -9,14 +9,19 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
+import CreditCounter from "@/app/utils/CreditCounter";
 
 type Props = {
   openSideBar: boolean;
   setOpenSideBar: (openSideBAr: boolean) => void;
   active: number;
   setActive: (active: number) => void;
+  credits: number;
+  setOpen: any;
+  setRoute: any;
+  isPro: boolean;
 };
 const routes = [
   {
@@ -67,11 +72,16 @@ const DashboardSidebar = ({
   setOpenSideBar,
   active,
   setActive,
+  credits,
+  setOpen,
+  setRoute,
+  isPro,
 }: Props) => {
   return (
     <div
-      className={`dark:bg-[#050237] bg-slate-200 pt-[90px] p-2 h-screen w-full`}
+      className={`dark:bg-[#050237] flex flex-col justify-between bg-slate-200 pt-[90px] p-2 h-screen w-full`}
     >
+      <div>
       <div className=" flex justify-end ">
         {openSideBar ? (
           <IoIosArrowBack
@@ -108,7 +118,7 @@ const DashboardSidebar = ({
        </Link>
         <br />
         <br />
-        <div className=" space-y-1 mt-10">
+        <div className=" space-y-1 800px:mt-5 mt-4">
           {routes.map((route) => (
             <div
               key={route.active}
@@ -120,7 +130,7 @@ const DashboardSidebar = ({
             >
               <route.icon className={`h-5 w-5 ${route.color}`} />
               <p
-                className={`font-Poppins max-400px:text-[6px] overflow-hidden ${
+                className={`font-Poppins text-black dark:text-white 800px:text-[14px] 600px:text-[11px] text-[8px] overflow-hidden ${
                   openSideBar ? " textComingAnimation " : " hidden"
                 }`}
               >
@@ -130,6 +140,8 @@ const DashboardSidebar = ({
           ))}
         </div>
       </div>
+      </div>
+        <CreditCounter isPro={isPro} openSideBar={openSideBar} credit={credits} setOpen={setOpen} setRoute={setRoute} />
     </div>
   );
 };

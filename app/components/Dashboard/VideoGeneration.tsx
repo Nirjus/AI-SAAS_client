@@ -1,25 +1,30 @@
 import { style } from '@/app/styles/style'
 import DashboardHeading from '@/app/utils/DashboardHeading'
-import { ChevronDown, ChevronUp, Video } from 'lucide-react'
+import { ChevronDown, ChevronUp, Sparkles, Video } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import Loader from '../Loader'
 import { useGetAllVideoQuery, useVideoGenerationMutation } from '@/redux/features/video/videoApi'
 import { useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
+import { getRandomVideoPrompts } from '@/app/utils/Prompts/randomPrompts'
+import { useGetCreditCountQuery } from '@/redux/features/user/userApi'
+import { maxCreditCount } from '@/app/utils/constants'
 
 type Props = {
     setOpen: any;
-    setRoute: any
+    setRoute: any;
+    refetchCredit:any;
 }
 
-const VideoGeneration = ({setOpen, setRoute}: Props) => {
-     const [video, setVideo] = useState<string>();
+const VideoGeneration = ({setOpen, setRoute ,refetchCredit}: Props) => {
+     const [video, setVideo] = useState("");
      const [vusial, setVusial] = useState([]);
      const [drawer, setDrawer] = useState(false);
      const [videoGeneration, {isLoading, error, isSuccess, data:videoData}] = useVideoGenerationMutation();
      const {data, refetch} = useGetAllVideoQuery({}, {refetchOnMountOrArgChange:true})
      const {user} = useSelector((state: any) => state.auth);
+     const {data: creditData} = useGetCreditCountQuery({});
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -34,6 +39,7 @@ const VideoGeneration = ({setOpen, setRoute}: Props) => {
     useEffect(() => {
       if(isSuccess){
         refetch();
+        refetchCredit();
       }
       if(error){
         if("data" in error){
@@ -44,7 +50,15 @@ const VideoGeneration = ({setOpen, setRoute}: Props) => {
       if(data){
         setVusial(data?.videos);
       }
-    },[data, isSuccess, error, refetch])
+      if(creditData?.credit === maxCreditCount){
+        setOpen(true);
+        setRoute("pro-modal");
+      }
+    },[data, isSuccess, error, refetch, refetchCredit, creditData, setOpen, setRoute])
+    const hasndlePrompt = () => {
+      const randomPrompt = getRandomVideoPrompts(video);
+      setVideo(randomPrompt);
+    }
   return (
     <div>
         <DashboardHeading 
@@ -58,15 +72,22 @@ const VideoGeneration = ({setOpen, setRoute}: Props) => {
           <div className="px-4 lg:px-8">
         <form action="" onSubmit={handleSubmit} className=" w-full  rounded-lg">
           <div className=" w-full flex 800px:flex-row flex-col justify-between lg:gap-10 md:gap-6 800px:items-center">
+          <div className=" flex w-full">
             <textarea
               name="prompt"
               cols={30}
               rows={1}
-              placeholder="big fish in the river.."
+              placeholder="Big fish in the river swim.."
               value={video}
               onChange={(e) => setVideo(e.target.value)}
-              className={` ${style.input} dark:!bg-[#2f0936] !w-full h-fit`}
+              className={` ${style.input} !rounded-r-none dark:!bg-[#2f0936] !w-full h-fit`}
             ></textarea>
+            <div className=" cursor-pointer bg-gray-200 p-3 rounded-r-[5px] text-[14px] dark:bg-[#2f0936] text-center"
+            onClick={() => hasndlePrompt()}
+            >
+              <Sparkles />
+            </div>
+            </div>
 
             <div className=" 800px:mt-0 mt-[30px]">
               <button
@@ -89,7 +110,8 @@ const VideoGeneration = ({setOpen, setRoute}: Props) => {
             <Loader />
           </div>
         )}
-        {!video && !isLoading && (
+       <div className={`${!videoData && "min-h-[300px]"}`}>
+       {!video && !isLoading && (
           <div className=" w-full flex flex-col justify-center items-center">
             <Image
               src={require("../../../public/images/3d video icon.png")}
@@ -103,6 +125,7 @@ const VideoGeneration = ({setOpen, setRoute}: Props) => {
             </p>
           </div>
         )}
+       </div>
         {videoData && (
           <video controls className=" aspect-video w-full mt-10 800px:px-9 px-5">
             <source src={videoData?.output} />

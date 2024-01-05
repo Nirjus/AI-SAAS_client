@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.18",
     "@reduxjs/toolkit": "^2.0.1",
+    "crisp-sdk-web": "^1.0.21",
     "file-saver": "^2.0.5",
     "formik": "^2.4.5",
     "lottie-react": "^2.4.0",

@@ -8,13 +8,16 @@ import { useSelector } from 'react-redux';
 import Image from 'next/image';
 import ReactMarkdown from "react-markdown";
 import { useCodeCreationMutation, useGetAllcodesQuery } from '@/redux/features/code/codeApi';
+import { useGetCreditCountQuery } from '@/redux/features/user/userApi';
+import { maxCreditCount } from '@/app/utils/constants';
 
 type Props = {
     setOpen: any;
     setRoute: any;
+    refetchCredit: any;
 }
 
-const CodeGeneration = ({setOpen, setRoute}: Props) => {
+const CodeGeneration = ({setOpen, setRoute, refetchCredit}: Props) => {
     const [message, setMessage] = useState("");
   const [drawer, setDrawer] = useState(false);
   const [getMsg, setGetMsg] = useState([]);
@@ -22,6 +25,7 @@ const CodeGeneration = ({setOpen, setRoute}: Props) => {
   const {data, refetch} = useGetAllcodesQuery({},{refetchOnMountOrArgChange:true});
   const {user} = useSelector((state: any) => state.auth);
   const pRef = useRef<HTMLParagraphElement | null>(null);
+  const {data: creditData} = useGetCreditCountQuery({})
  const handleSubmit = async (e:any) => {
   e.preventDefault();
    if(!user){
@@ -34,6 +38,7 @@ const CodeGeneration = ({setOpen, setRoute}: Props) => {
  useEffect(() => {
   if(isSuccess){
     refetch();
+    refetchCredit();
   }
    if(error){
     if("data" in error){
@@ -44,7 +49,11 @@ const CodeGeneration = ({setOpen, setRoute}: Props) => {
    if(data){
     setGetMsg(data?.codesArray);
    }
- },[error, isSuccess, refetch, data])
+   if(creditData?.credit === maxCreditCount){
+    setOpen(true);
+    setRoute("pro-modal");
+  }
+ },[error, isSuccess, refetch, data, refetchCredit, creditData, setRoute, setOpen])
   const copyText = async () => {
     try {
       const textToCopy = pRef.current?.innerText;
@@ -99,6 +108,7 @@ const CodeGeneration = ({setOpen, setRoute}: Props) => {
             <Loader />
           </div>
         )}
+        <div className={`${!messageData && "min-h-[300px]"}`}>
         {!message && !isLoading && (
           <div className=" w-full flex flex-col justify-center items-center">
             <Image
@@ -113,6 +123,7 @@ const CodeGeneration = ({setOpen, setRoute}: Props) => {
             </p>
           </div>
         )}
+        </div>
         {messageData && (
         <div className=' w-full relative flex gap-4 mt-10 800px:p-5 p-3 bg-slate-100 dark:bg-[#bd64d81e] rounded-[6px]'>
           <Image src={require("../../../public/images/logo.png")} alt='logo png' width={500} height={500} className='w-10 h-10 rounded-full' />

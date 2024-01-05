@@ -8,13 +8,16 @@ import Loader from '../Loader';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
 import ReactMarkdown from "react-markdown";
+import { useGetCreditCountQuery } from '@/redux/features/user/userApi';
+import { maxCreditCount } from '@/app/utils/constants';
 
 type Props = {
   setOpen: any;
   setRoute: any;
+  refetchCredit: any;
 }
 
-const Conversation = ({setOpen, setRoute}: Props) => {
+const Conversation = ({setOpen, setRoute, refetchCredit}: Props) => {
   const [message, setMessage] = useState("");
   const [drawer, setDrawer] = useState(false);
   const [getMsg, setGetMsg] = useState([]);
@@ -22,6 +25,8 @@ const Conversation = ({setOpen, setRoute}: Props) => {
   const {data, refetch} = useGetAllConversationQuery({},{refetchOnMountOrArgChange:true});
   const {user} = useSelector((state: any) => state.auth);
   const pRef = useRef<HTMLParagraphElement | null>(null);
+  const {data: creditData} = useGetCreditCountQuery({});
+
  const handleSubmit = async (e:any) => {
   e.preventDefault();
    if(!user){
@@ -34,6 +39,7 @@ const Conversation = ({setOpen, setRoute}: Props) => {
  useEffect(() => {
   if(isSuccess){
     refetch();
+    refetchCredit();
   }
    if(error){
     if("data" in error){
@@ -44,7 +50,12 @@ const Conversation = ({setOpen, setRoute}: Props) => {
    if(data){
     setGetMsg(data?.conversations);
    }
- },[error, isSuccess, refetch, data])
+   if(creditData?.credit === maxCreditCount){
+    setOpen(true);
+    setRoute("pro-modal");
+  }
+ },[error, isSuccess, refetch, data, refetchCredit, creditData, setOpen, setRoute])
+ 
   const copyText = async () => {
     try {
       const textToCopy = pRef.current?.innerText;
@@ -99,7 +110,8 @@ const Conversation = ({setOpen, setRoute}: Props) => {
             <Loader />
           </div>
         )}
-        {!message && !isLoading && (
+       <div className={`${!messageData && "min-h-[300px]"}`}>
+       {!message && !isLoading && (
           <div className=" w-full flex flex-col justify-center items-center">
             <Image
               src={require("../../../public/images/chat3D.png")}
@@ -113,6 +125,7 @@ const Conversation = ({setOpen, setRoute}: Props) => {
             </p>
           </div>
         )}
+       </div>
         {messageData && (
         <div className=' w-full relative flex gap-4 mt-10 800px:p-5 p-3 bg-slate-100 dark:bg-[#bd64d81e] rounded-[6px]'>
           <Image src={require("../../../public/images/logo.png")} alt='logo png' width={500} height={500} className='w-10 h-10 rounded-full' />
