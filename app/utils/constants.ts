@@ -112,4 +112,33 @@ export const surpriseMePrompts = [
 "Compose a cinematic score for a short film or animation.",
 "Generate a glitchy and experimental audio track for avant-garde content."
   ]
+
+export const faqArray = [
+  {
+    question:"What is the minimum subscription plan for PRO membership?",
+    answer: "You have to visit our planes, there is deferent type of plans, minmum plan starting from 20$ per month",
+    active: 1
+  },
+  {
+    question: "Can I cancel my subscription plan? is it manageble?",
+    answer: "Yes user can perchase a plane by his convinience, and after that, he/she could manage there plan also",
+    active: 2
+  },
+  {
+    question: "Is there any free generation limit, or Can I generate freely?",
+    answer: "There is free generation,per user can generate upto 5 free credit, after free credits, are end you have to move for PRO",
+    active: 3,
+  },
+  {
+    question: "Can we generate Ai Images?",
+    answer: "Yes of course, you can, you can generate , music, video, Image, text, code what your imagenation is",
+    active: 4,
+  },
+  {
+    question: "How do I sign up for AI Studio?",
+    answer: "To create an account, click on the SignUp button on the homepage. Fill in the required information",
+    active: 5,
+  }
+]
+
 export const maxCreditCount = 5;

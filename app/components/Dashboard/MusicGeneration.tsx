@@ -24,16 +24,12 @@ const MusicGeneration = ({ setOpen, setRoute,refetchCredit }: Props) => {
   const [music, setMusic] = useState("");
   const [duration, setDuration] = useState<number>();
   const [format, setFormat] = useState("wav");
-  const [audio, setAudio] = useState([]);
-  const [drawer, setDrawer] = useState(false);
   const [createMusic, { isLoading, data: musicData, isSuccess, error }] =
     useCreateMusicMutation();
     const formats = ["wav","mp3"];
   const {data: creditData} = useGetCreditCountQuery({});
   const {
-    data,
     refetch,
-    error: musicError,
   } = useGetAllmusicQuery({}, { refetchOnMountOrArgChange: true });
   const { user } = useSelector((state: any) => state.auth);
   const handleSubmit = async (e: any) => {
@@ -61,20 +57,11 @@ const MusicGeneration = ({ setOpen, setRoute,refetchCredit }: Props) => {
         toast.error(errorData.data.message);
       }
     }
-    if (musicError) {
-      if ("data" in musicError) {
-        const errorData = musicError as any;
-        toast.error(errorData.data.message);
-      }
-    }
-    if (data) {
-      setAudio(data.audios);
-    }
     if(creditData?.credit === maxCreditCount){
       setOpen(true);
       setRoute("pro-modal");
     }
-  }, [error, isSuccess, refetch, musicError, data, refetchCredit, creditData, setOpen, setRoute]);
+  }, [error, isSuccess, refetch, refetchCredit, creditData, setOpen, setRoute]);
    const hasndlePrompt = () => {
     const randomPromts = getRandomAudioPrompts(music);
     setMusic(randomPromts);
@@ -173,36 +160,6 @@ const MusicGeneration = ({ setOpen, setRoute,refetchCredit }: Props) => {
           </audio>
         )}
       </div>
-      <div className=" 1000px:w-[40%] h-fit sticky mt-10 800px:p-8 p-3 rounded-[30px] bg-[#cacaca47] dark:bg-[#0000005e] ">
-          <div className=" flex gap-5 items-center">
-            <p className=" pl-2 800px:text-[21px] text-[18px] font-Poppins font-semibold text-black dark:text-white">
-              List of music you generated
-            </p>
-            {drawer ? (
-              <ChevronDown size={25} className=" cursor-pointer" onClick={() => setDrawer(false)} />
-            ) : (
-              <ChevronUp size={25} className=" cursor-pointer" onClick={() => setDrawer(true)} />
-            )}
-          </div>
-          {drawer && (
-            <div className=" w-full max-h-[300px] overflow-y-scroll ">
-              {audio &&
-                audio.map((audio: any, index: number) => (
-                <div className=" w-full mt-7 " key={index}>
-                <p className=" pl-5 font-semibold text-[#ea3c76] dark:text-[#3faceb]">{audio.prompt}</p>
-                  <audio controls className=" w-full mt-1 ">
-                    <source src={audio.music} />
-                  </audio>
-                </div>
-                ))}
-                {
-                 audio && audio.length === 0 && (
-                    <p className=' tracking-widest mt-5 font-semibold text-center'>No Audio have till now</p>
-                  )
-                }
-            </div>
-          )}
-        </div>
         </div>
     </div>
   );

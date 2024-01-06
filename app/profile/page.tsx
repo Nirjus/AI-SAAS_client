@@ -7,6 +7,7 @@ import Protected from '../hooks/userProtected'
 import Profile from "../components/Profile/Profile"
 import { useLoaduserQuery } from '@/redux/features/api/apiSlice'
 import Loader from '../components/Loader'
+import Footer from '../components/footer/footer'
 type Props = {}
 
 const Page = (props: Props) => {
@@ -37,6 +38,7 @@ const Page = (props: Props) => {
             <Profile user={user}/>
           )
         }
+        <Footer />
       </Protected>
     </div>
   )

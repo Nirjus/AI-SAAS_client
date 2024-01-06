@@ -3,7 +3,8 @@ import React, { FC, useState } from "react";
 import Heading from "./utils/Heading";
 import Header from "./components/Header";
 import Hero from "./components/Route/Hero";
-
+import Feateare from "./components/Route/Feateare"
+import Footer from "./components/footer/footer";
 type Props = {};
 
 const Page: FC<Props> = ({}) => {
@@ -26,7 +27,15 @@ const Page: FC<Props> = ({}) => {
         route={route}
         setRoute={setRoute}
       />
-      <Hero />
+    <div className="banner">
+    <Hero />
+    </div>
+     <br />
+     <br />
+     <Feateare />
+     <br />
+     <br />
+     <Footer />
     </div>
   );
 };

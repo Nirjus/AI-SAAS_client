@@ -19,10 +19,8 @@ type Props = {
 
 const VideoGeneration = ({setOpen, setRoute ,refetchCredit}: Props) => {
      const [video, setVideo] = useState("");
-     const [vusial, setVusial] = useState([]);
-     const [drawer, setDrawer] = useState(false);
      const [videoGeneration, {isLoading, error, isSuccess, data:videoData}] = useVideoGenerationMutation();
-     const {data, refetch} = useGetAllVideoQuery({}, {refetchOnMountOrArgChange:true})
+     const { refetch} = useGetAllVideoQuery({}, {refetchOnMountOrArgChange:true})
      const {user} = useSelector((state: any) => state.auth);
      const {data: creditData} = useGetCreditCountQuery({});
 
@@ -47,14 +45,11 @@ const VideoGeneration = ({setOpen, setRoute ,refetchCredit}: Props) => {
             toast.error(errorData.data.message);
         }
       }
-      if(data){
-        setVusial(data?.videos);
-      }
       if(creditData?.credit === maxCreditCount){
         setOpen(true);
         setRoute("pro-modal");
       }
-    },[data, isSuccess, error, refetch, refetchCredit, creditData, setOpen, setRoute])
+    },[ isSuccess, error, refetch, refetchCredit, creditData, setOpen, setRoute])
     const hasndlePrompt = () => {
       const randomPrompt = getRandomVideoPrompts(video);
       setVideo(randomPrompt);
@@ -132,36 +127,7 @@ const VideoGeneration = ({setOpen, setRoute ,refetchCredit}: Props) => {
           </video>
         )}
       </div>
-      <div className=" 1000px:w-[40%] h-fit sticky mt-10 800px:p-8 p-3 rounded-[30px] bg-[#cacaca47] dark:bg-[#0000005e] ">
-          <div className=" flex gap-5 items-center">
-            <p className=" pl-2 800px:text-[21px] text-[18px] font-Poppins font-semibold text-black dark:text-white">
-              List of videos you generated
-            </p>
-            {drawer ? (
-              <ChevronDown size={25} className=" cursor-pointer" onClick={() => setDrawer(false)} />
-            ) : (
-              <ChevronUp size={25} className=" cursor-pointer" onClick={() => setDrawer(true)} />
-            )}
-          </div>
-          {drawer && (
-            <div className=" w-full max-h-[400px] overflow-y-scroll ">
-              {vusial &&
-                vusial.map((video: any, index: number) => (
-                <div className=" w-full mt-7 " key={index}>
-                <p className=" pl-5 font-semibold text-[#ea3c76] dark:text-[#3faceb]">{video.prompt}</p>
-                  <video controls className=" w-full aspect-video mt-1 ">
-                    <source src={video.video} />
-                  </video>
-                </div>
-                ))}
-                {
-                  vusial && vusial.length === 0 && (
-                    <p className=' tracking-widest mt-5 font-semibold text-center'>No video have till now</p>
-                  )
-                }
-            </div>
-          )}
-        </div>
+
         </div>
     </div>
   )

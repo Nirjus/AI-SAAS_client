@@ -39,13 +39,11 @@ interface IImageProps {
 const ImageGeneration = ({ setOpen, setRoute, refetchCredit }: Props) => {
   const [image, setImage] = useState("");
   const [num, setNum] = useState<number>();
-  const [vusial, setVusial] = useState([]);
   const [visible, setVisible] = useState(false);
   const [imgUri1, setImgUr1] = useState("");
-  const [drawer, setDrawer] = useState(false);
   const [imageGeneration, { isLoading, error, isSuccess, data: imageData }] =
     useImageGenerationMutation();
-  const { data, refetch } = useGetAllImagesQuery(
+  const { refetch } = useGetAllImagesQuery(
     {},
     { refetchOnMountOrArgChange: true }
   );
@@ -76,14 +74,12 @@ const ImageGeneration = ({ setOpen, setRoute, refetchCredit }: Props) => {
         toast.error(errorData.data.message);
       }
     }
-    if (data) {
-      setVusial(data?.images);
-    }
+
     if(creditData?.credit === maxCreditCount){
       setOpen(true);
       setRoute("pro-modal");
     }
-  }, [data, isSuccess, error, refetch, refetchCredit, creditData, setOpen, setRoute]);
+  }, [ isSuccess, error, refetch, refetchCredit, creditData, setOpen, setRoute]);
    const handleSurpriseMe = () => {
     const randomPrompt = getRandomPrompts(image);
      setImage(randomPrompt);
@@ -179,48 +175,7 @@ const ImageGeneration = ({ setOpen, setRoute, refetchCredit }: Props) => {
             ))}
         </div>
       </div>
-      <div className=" h-fit w-fit  800px:p-8 p-3 rounded-[30px] bg-[#cacaca47] dark:bg-[#0000005e] ">
-        <div className=" flex gap-5 items-center">
-          <p className=" pl-2 800px:text-[21px] text-[18px] font-Poppins font-semibold text-black dark:text-white">
-            List of images you generated
-          </p>
-          {drawer ? (
-            <ChevronDown
-              size={25}
-              className=" cursor-pointer"
-              onClick={() => setDrawer(false)}
-            />
-          ) : (
-            <ChevronUp
-              size={25}
-              className=" cursor-pointer"
-              onClick={() => setDrawer(true)}
-            />
-          )}
-        </div>
-        {drawer && (
-          <div className=" w-full max-h-[400px] overflow-y-scroll ">
-            {vusial &&
-              vusial.map((img: any, index: number) => (
-                <div className=" w-full mt-7 " key={index}>
-                  <p className=" pl-5 font-semibold text-[#ea3c76] dark:text-[#3faceb]">
-                    {img.prompt}
-                  </p>
-                  <div className=" flex gap-2">
-                    {img.image.map((i: any) => (
-                      <ImageComponent key={i._id} i={i} width={"w-[150px]"} setImgUr1={setImgUr1} setVisible={setVisible} />
-                    ))}
-                  </div>
-                </div>
-              ))}
-              {
-               vusial && vusial.length === 0 && (
-                  <p className=' tracking-widest mt-5 font-semibold text-center'>No Images have till now</p>
-                )
-              }
-          </div>
-        )}
-      </div>
+  
       {visible && (
         <div className="  w-full z-[9999] h-screen fixed top-0 left-0 backdrop-blur-[2px] bg-[#12121221]">
           <div className=" w-[40%] h-auto bg-transparent fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2">

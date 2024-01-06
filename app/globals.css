@@ -7,6 +7,15 @@
     width: 8px;
   }
 
+  .banner {
+    min-height: 100vh;
+    background-image: url("https://pixner.net/aikeu/assets/images/banner/banner-one-bg.png");
+    background-position: center;
+    background-size: cover;
+    overflow: hidden;
+    z-index: 1;
+  }
+
 .sideBaranimationRightToleft{
   transition: all;
   animation: rightToleft 500ms ease-in-out ;

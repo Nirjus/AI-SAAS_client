@@ -73,8 +73,8 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
     url: "/dashboard"
    },
     {
-      name: "Policy",
-      url: "/policy",
+      name: "My media",
+      url: "/mymedia",
     },
     {
       name: "FAQ",

@@ -1,5 +1,5 @@
 import DashboardHeading from '@/app/utils/DashboardHeading'
-import { ChevronDown, ChevronUp, Code2, PencilIcon } from 'lucide-react'
+import { Code2, PencilIcon } from 'lucide-react'
 import React, { useState,useEffect, useRef } from 'react'
 import { style } from '@/app/styles/style';
 import toast from 'react-hot-toast';
@@ -19,10 +19,8 @@ type Props = {
 
 const CodeGeneration = ({setOpen, setRoute, refetchCredit}: Props) => {
     const [message, setMessage] = useState("");
-  const [drawer, setDrawer] = useState(false);
-  const [getMsg, setGetMsg] = useState([]);
   const [codeCreation,{isSuccess, data:messageData,isLoading,error}] = useCodeCreationMutation();
-  const {data, refetch} = useGetAllcodesQuery({},{refetchOnMountOrArgChange:true});
+  const { refetch} = useGetAllcodesQuery({},{refetchOnMountOrArgChange:true});
   const {user} = useSelector((state: any) => state.auth);
   const pRef = useRef<HTMLParagraphElement | null>(null);
   const {data: creditData} = useGetCreditCountQuery({})
@@ -46,14 +44,11 @@ const CodeGeneration = ({setOpen, setRoute, refetchCredit}: Props) => {
       toast.error(errorData.data.message);
     }
    }
-   if(data){
-    setGetMsg(data?.codesArray);
-   }
    if(creditData?.credit === maxCreditCount){
     setOpen(true);
     setRoute("pro-modal");
   }
- },[error, isSuccess, refetch, data, refetchCredit, creditData, setRoute, setOpen])
+ },[error, isSuccess, refetch, refetchCredit, creditData, setRoute, setOpen])
   const copyText = async () => {
     try {
       const textToCopy = pRef.current?.innerText;
@@ -158,62 +153,7 @@ const CodeGeneration = ({setOpen, setRoute, refetchCredit}: Props) => {
         </div>
         )}
       </div>
-      <div className=" 1000px:w-[45%] h-fit sticky mt-10 800px:p-7 p-4 rounded-[30px] bg-[#cacaca47] dark:bg-[#0000005e] ">
-          <div className=" flex gap-5 items-center">
-            <p className=" pl-2 800px:text-[21px] text-[18px] font-Poppins font-semibold text-black dark:text-white">
-              Previous chat history
-            </p>
-            {drawer ? (
-              <ChevronDown size={25} className=" cursor-pointer" onClick={() => setDrawer(false)} />
-            ) : (
-              <ChevronUp size={25} className=" cursor-pointer" onClick={() => setDrawer(true)} />
-            )}
-          </div>
-          {drawer && (
-            <div className=" w-full max-h-[400px] overflow-y-scroll ">
-              {getMsg &&
-                getMsg.map((msg: any, index: number) => (
-                <div className=" w-full mt-7 " key={index}>
-                <div className='flex justify-between p-2 bg-[#00000015] dark:bg-[#5fffff0a] rounded-[6px] gap-2 items-start'>
-                 <p className=' bg-cyan-500 w-10 h-10 text-center p-2 rounded-full'>{user?.name[0]}</p>
-                <p className=" font-semibold w-[85%] text-[18px] text-[#ea3c76] dark:text-[#3faceb]">{msg.prompt}</p>
-                </div>
-                 <div className=' flex justify-between mt-2 gap-2 p-2 rounded-[6px] bg-white dark:bg-[#38035630] items-start'>
-                  <Image src={require("../../../public/images/logo.png")} alt='logo png' width={500} height={500} className='w-10 h-10 rounded-full' />
-                  {/* <p className=" w-[85%] text-black dark:text-white text-justify">
-                    {msg.answer}
-                  </p> */}
-                  <ReactMarkdown components={{
-                     ol: ({node, ...props}) => (
-                      <ol className=' list-decimal list-inside ' {...props}></ol>
-                    ),
-                    ul: ({node, ...props}) => (
-                        <ul className=' list-disc list-inside ' {...props}></ul>
-                      ),
-                    pre:({node, ...props}) => (
-                      <div className=' overflow-auto w-full my-2 bg-black/10 dark:bg-[#323232]  p-2 rounded-md'>
-                        <pre {...props} />
-                      </div>
-                    ),
-                    code: ({node, ...props}) => (
-                      <code className=" bg-black/10 rounded-lg text-[#531414] dark:text-[#bfd1ff] p-1" {...props} />
-                    )
-                  }}
-                   className={" text-sm overflow-hidden leading-7 w-[85%]"}
-                  >
-                  {msg.solution || ""}
-                  </ReactMarkdown>
-                 </div>
-                </div>
-                ))}
-                {
-                  getMsg &&  getMsg.length === 0 && (
-                        <p className=' tracking-widest mt-5 font-semibold text-center'>No chats have till now</p>
-                    )
-                }
-            </div>
-          )}
-        </div>
+     
         </div>
     </div>
   )
