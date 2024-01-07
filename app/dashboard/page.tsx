@@ -8,6 +8,7 @@ import { useGetCreditCountQuery } from "@/redux/features/user/userApi";
 import CustomModal from "../utils/CustomModal";
 import Promodal from "../components/Subscription/pro-modal";
 import { useCheckSubscriptionQuery } from "@/redux/features/subscription/subscriptionApi";
+import Protected from "../hooks/userProtected";
 
 type Props = {};
 
@@ -32,6 +33,7 @@ const Page = (props: Props) => {
 
   return (
     <div>
+      <Protected >
       <Heading
         title="AI Studio - Dashboard"
         description="Make next level Ai Generated Images, text, code snippets"
@@ -81,6 +83,7 @@ const Page = (props: Props) => {
           </>
         )
       }
+      </Protected>
     </div>
   );
 };

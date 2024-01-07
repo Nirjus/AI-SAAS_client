@@ -94,7 +94,13 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
               }`}
               key={index}
             >
-              <Link href={item.url}>{item.name}</Link>
+              {
+                user ? (
+                  <Link href={item.url}>{item.name}</Link>
+                ):(
+                  <p onClick={() => setOpen(true)} className=" cursor-pointer">{item.name}</p>
+                )
+              }
             </div>
           ))}
         </div>
@@ -144,7 +150,13 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
                     }`}
                     key={index}
                   >
-                    <Link href={item.url} className="">{item.name}</Link>
+                    {
+                user ? (
+                  <Link href={item.url}>{item.name}</Link>
+                ):(
+                  <p onClick={() => setOpen(true)} className=" cursor-pointer">{item.name}</p>
+                )
+              }
                   </div>
                 ))}
               </div>
