@@ -13,12 +13,12 @@ const authSlice = createSlice({
             state.token = action.payload.token;
         },
         userLoggedIn: (state, action: PayloadAction<{accesskey: string, user: string}>) => {
-            state.token = action.payload.accesskey,
-            state.user = action.payload.user
+            state.token = action.payload.accesskey;
+            state.user = action.payload.user;
         },
         userLoggedOut: (state) => {
-            state.user = "",
-            state.token = ""
+            state.token = "";
+            state.user = "";
         }
     }
 })
