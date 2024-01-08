@@ -10,6 +10,7 @@ import CustomModal from "@/app/utils/CustomModal";
 import { useLogOutQuery } from "@/redux/features/auth/authApi";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
+import { useCheckSubscriptionQuery } from "@/redux/features/subscription/subscriptionApi";
 
 type Props = {
   user: any;
@@ -19,7 +20,8 @@ const Profile = ({ user }: Props) => {
   const [active, setActive] = useState(1);
   const [scroll, setScroll] = useState(false);
   const [open, setOpen] = useState(true);
-
+  const [isPro, setIsPro] = useState(false);
+  const {data: validity} = useCheckSubscriptionQuery({}); 
   const [logout, setLogout] = useState(false);
   const {isSuccess,data} = useLogOutQuery(undefined,{
       skip: !logout ? true : false
@@ -41,11 +43,13 @@ const Profile = ({ user }: Props) => {
   }
   useEffect(() => {
      if(isSuccess){
-      signOut();
       const message = data?.message || "Logout Successful";
       toast.success(message);
      }
-  },[isSuccess, data])
+     if(validity){
+      setIsPro(validity?.isValid);
+      }
+  },[isSuccess, data, validity])
   return (
     <div className=" w-[85%] flex mx-auto">
       <div
@@ -64,7 +68,7 @@ const Profile = ({ user }: Props) => {
       <div className=" mb-[80px] mt-[160px] px-[20px] w-full bg-transparent">
         {active === 1 && <ProfileInfo user={user} />}
         {active === 2 && <ChangePassword />}
-        {active === 3 && <Subscription />}
+        {active === 3 && <Subscription isPro={isPro} />}
         {active === 4 && <SaveItems />}
         {active === 6 && (
           <>

@@ -4,13 +4,12 @@ import { Verified, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 
-type Props = {}
+type Props = {
+  isPro: boolean;
+}
 
-const Subscription = (props: Props) => {
- const [isPro, setIsPro] = useState(false);
+const Subscription = ({isPro}: Props) => {
  const [loading, setLoading] = useState(true);
-
- const {data: validity} = useCheckSubscriptionQuery({}); 
  const {isSuccess, data, error} = useCreateCheckoutQuery(undefined, {
   skip: loading ? true : false
  })
@@ -27,10 +26,8 @@ const Subscription = (props: Props) => {
       toast.error(errorData.data.message);
     }
   }
-if(validity){
-setIsPro(validity?.isValid);
-}
- },[validity, isSuccess, error, data])
+
+ },[ isSuccess, error, data])
 
   return (
     <div>

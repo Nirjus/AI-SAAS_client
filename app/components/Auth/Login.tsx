@@ -79,7 +79,7 @@ const Login = ({setRoute, setOpen}: Props) => {
 
   return (
     <div>
-        <div className=' w-full h-auto'>
+       <div className=' w-full h-auto'>
           <h1 className=' text-center font-[600] text-[22px] font-Josefin'>
             LogIn here
           </h1>
