@@ -18,11 +18,8 @@ const ProfileInfo = ({ user }: Props) => {
   const [address, setAddress] = useState(user?.address);
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber);
   const [image, setImage] = useState<any>(null);
-  const [loadUser,setLoadUser] = useState(false);
-  const [updateUser,{isSuccess, error, isLoading}] = useUpdateUserMutation();
-  const {} = useLoaduserQuery(undefined,{
-    skip: loadUser ? false : true
-  });
+  const [updateUser,{isSuccess, isLoading,error}] = useUpdateUserMutation();
+  const {refetch} = useLoaduserQuery(undefined,{refetchOnMountOrArgChange: true});
   
   const imageHandeler = (e: any) => {
     const file = e.target.files[0];
@@ -48,7 +45,7 @@ const ProfileInfo = ({ user }: Props) => {
   }
   useEffect(() => {
     if(isSuccess){
-    setLoadUser(true);
+     refetch()
       toast.success("User updated successfully");
     }
     if(error){
@@ -57,7 +54,7 @@ const ProfileInfo = ({ user }: Props) => {
         toast.error(errorData.data.message);
       }
     }
-  },[isSuccess, error ])
+  },[isSuccess, error, refetch])
   return (
     <div className="w-full">
       <form onSubmit={submitHandler} className=" w-full flex flex-col items-center">

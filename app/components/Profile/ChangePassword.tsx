@@ -13,10 +13,8 @@ const ChangePassword = (props: Props) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [visible1, setVisible1] = useState(false);
   const [visible2, setVisible2] = useState(false);
-   const [loadUser, setLoadUser] = useState(false);
-  const {} = useLoaduserQuery(undefined,{
-    skip: loadUser ? false : true
-  });
+
+  const {refetch} = useLoaduserQuery(undefined,{refetchOnMountOrArgChange: true});
   const [updatePassword, {isSuccess, data,isLoading, error}] = useUpdatePasswordMutation();
     const submitHandler = async (e: any) => {
        e.preventDefault();
@@ -28,7 +26,7 @@ const ChangePassword = (props: Props) => {
     }
     useEffect(() => {
       if(isSuccess){
-        setLoadUser(true);
+        refetch();
         const message = data?.message || "Password updated";
        toast.success(message);
        setOldPassword("");
@@ -41,7 +39,7 @@ const ChangePassword = (props: Props) => {
            toast.error(errorData.data.message);
          }
        }
-    },[isSuccess, data, error ])
+    },[isSuccess, data, error, refetch])
   
   return (
     <div className=" w-full">
