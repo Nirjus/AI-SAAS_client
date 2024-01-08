@@ -6,9 +6,9 @@ import { FcGoogle } from "react-icons/fc";
 import { SiGithub } from "react-icons/si";
 import { useFormik } from 'formik';
 import * as Yup from "yup";
-import { useLoginMutation } from '@/redux/features/auth/authApi';
+import { useLoginMutation, useSocialAuthMutation } from '@/redux/features/auth/authApi';
 import toast from 'react-hot-toast';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
 type Props = {
   setRoute: (route: string) => void;
@@ -23,7 +23,10 @@ const schema = Yup.object().shape({
 })
 const Login = ({setRoute, setOpen}: Props) => {
   const [visible, setVisible] = useState(false);
-   const [login, {isSuccess, data,error}] = useLoginMutation();
+   const [login, {isSuccess, data: loginData,error}] = useLoginMutation();
+  const [socialAuth,{isSuccess: socialSuccess,data:socialData, error: socialError}] = useSocialAuthMutation();
+   const {data} = useSession();
+
   const formik = useFormik({
     initialValues: {email: "", password: ""},
     validationSchema: schema,
@@ -31,20 +34,46 @@ const Login = ({setRoute, setOpen}: Props) => {
       await login({email,password});
     }
   });
- 
+  const googlSignIn = (e:any) => {
+    e.preventDefault();
+    signIn("google"); 
+  }
+   const githubSignIn =  (e: any) => {
+    e.preventDefault()
+     signIn("github");
+   }
+
   useEffect(() => {
-   if(isSuccess){
-    const message = data.message || "Login successful";
+    if(data){
+      socialAuth({
+        email:data?.user?.email,
+        name: data?.user?.name,
+        socialAvatar: data?.user?.image
+       })
+    }
+    if(socialSuccess){
+      const message = socialData.message || "Login successful";
     toast.success(message);
     setOpen(false);
-   }
+    }
+    if(isSuccess){
+      const message = loginData.message || "Login successful";
+      toast.success(message);
+      setOpen(false);
+     }
    if(error){
       if("data" in error){
         const errorData = error as any;
         toast.error(errorData.data.message);
       }
    }
-  },[isSuccess, error, data, setOpen])
+   if(socialError){
+    if("data" in socialError){
+      const errorData = socialError as any;
+      toast.error(errorData.data.message);
+    }
+   }
+  },[isSuccess, error, loginData, setOpen, socialAuth,data,socialData,socialSuccess, socialError])
 
   const {errors, touched, values, handleChange, handleSubmit} = formik;
 
@@ -100,16 +129,17 @@ const Login = ({setRoute, setOpen}: Props) => {
            forgot Password ?
           </p>
          </div>
+         </form>
          <div className=''>
           
              <p className=' text-center'>---------------- or Join with ----------------</p>
              <div className=' flex gap-7 justify-center pt-6'>
-          <div className=' p-[5px] w-[80px] cursor-pointer flex justify-center items-center rounded active:bg-[#0d0d0d2f] border-[#7e7e7e7d] border bg-[#0d0d0d1e]' onClick={() => signIn("google")}>
+          <button type="button" className=' p-[5px] w-[80px] cursor-pointer flex justify-center items-center rounded active:bg-[#0d0d0d2f] border-[#7e7e7e7d] border bg-[#0d0d0d1e]' onClick={googlSignIn}>
           <FcGoogle size={30} />
-          </div>
-              <div className=' p-[5px] w-[80px] cursor-pointer flex justify-center items-center rounded border-[#7e7e7e7d] border bg-[#0d0d0d1e] active:bg-[#0d0d0d2f]' onClick={() => signIn("github")}>
+          </button>
+              <button type='button' className=' p-[5px] w-[80px] cursor-pointer flex justify-center items-center rounded border-[#7e7e7e7d] border bg-[#0d0d0d1e] active:bg-[#0d0d0d2f]' onClick={githubSignIn}>
               <SiGithub size={28}/>
-              </div>
+              </button>
              </div>
          </div>
          <div className=' pt-7'>
@@ -117,7 +147,7 @@ const Login = ({setRoute, setOpen}: Props) => {
             dont have any account? <span onClick={() => setRoute("SignUp")} className=' cursor-pointer dark:text-white text-black'>SignUp</span>
           </p>
          </div>
-           </form>
+         
         </div>
     </div>
   )

@@ -77,7 +77,7 @@ const SidebarProfile = ({ user, active, setActive, setOpen, logoutHandler }: Pro
         className={`flex p-2 items-center gap-3 cursor-pointer rounded ${
           active === 5 ? "bg-[#0000002c] dark:bg-[#ffffff23]" : "bg-transparent"
         }`}
-        onClick={() => {setActive(5), logoutHandler()}}
+        onClick={() => logoutHandler()}
       >
         <MdLogout size={30} className=" text-[#df6478]" />
         <p className=" text-black dark:text-white font-[600] 800px:block hidden text-[18px]">

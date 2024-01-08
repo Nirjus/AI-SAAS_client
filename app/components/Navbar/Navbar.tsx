@@ -1,7 +1,7 @@
 import CustomModal from "@/app/utils/CustomModal";
 import ThemeSwitcher from "@/app/utils/Theme/ThemeSwitcher";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React,{ useState } from "react";
 import { FaList } from "react-icons/fa";
 import { FaRegUserCircle } from "react-icons/fa";
 import Login from "../../components/Auth/Login";
@@ -11,8 +11,7 @@ import { useSelector } from "react-redux";
 import Image from "next/image";
 import avatar from "../../../public/images/avatar.png";
 import { useSession } from "next-auth/react";
-import { useLogOutQuery, useSocialAuthMutation } from "@/redux/features/auth/authApi";
-import toast from "react-hot-toast";
+
 type Props = {
   activeItem: number;
   open: boolean;
@@ -25,12 +24,8 @@ type Props = {
 const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: Props) => {
   const [openSideBar, setOpenSideBar] = useState(false);
   const [reverse, setReverse] = useState(false);
-  const [logout, setLogout] = useState(false);
   const {user} = useSelector((state:any) => state.auth);
-  const [socialAuth,{isSuccess,data:socialData, error}] = useSocialAuthMutation();
-  // const {} = useLogOutQuery(undefined,{skip: logout ? false : true});
-    const {data} = useSession();
-
+  const {data} = useSession();
    const sideBar = (e:any) => {
         if(e.target.id === "mobileHeader"){
           setReverse(true);
@@ -39,30 +34,9 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
             },460);
         }
    }
-   useEffect(() => {
-    if(!user){
-      if(data){
-       socialAuth({
-        email:data?.user?.email,
-        name: data?.user?.name,
-        socialAvatar: data?.user?.image
-       })
-      }
-    }
-    if(data === null){
-      if(isSuccess){
-      const message = socialData?.message || "Login Successfully"
-      toast.success(message);
-    }
-  }
-   if(error){
-    if("data" in error){
-      const errorData = error as any;
-      toast.error(errorData?.data.message);
-    }
-   }
-   },[data, user, socialAuth, socialData, isSuccess, error])
-
+    if(!user && data){
+      setOpen(true);
+    } 
   const navItem = [
     {
       name: "Home",
@@ -94,13 +68,7 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
               }`}
               key={index}
             >
-              {
-                user ? (
-                  <Link href={item.url}>{item.name}</Link>
-                ):(
-                  <p onClick={() => setOpen(true)} className=" cursor-pointer">{item.name}</p>
-                )
-              }
+              <Link href={item.url}>{item.name}</Link>
             </div>
           ))}
         </div>
@@ -150,13 +118,7 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
                     }`}
                     key={index}
                   >
-                    {
-                user ? (
-                  <Link href={item.url}>{item.name}</Link>
-                ):(
-                  <p onClick={() => setOpen(true)} className=" cursor-pointer">{item.name}</p>
-                )
-              }
+                    <Link href={item.url} className="">{item.name}</Link>
                   </div>
                 ))}
               </div>

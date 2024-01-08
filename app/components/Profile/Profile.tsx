@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SidebarProfile from "./SidebarProfile";
 import ProfileInfo from "./ProfileInfo";
 import ChangePassword from "./ChangePassword";
@@ -21,13 +21,13 @@ const Profile = ({ user }: Props) => {
   const [open, setOpen] = useState(true);
 
   const [logout, setLogout] = useState(false);
-  const {} = useLogOutQuery(undefined,{
+  const {isSuccess,data} = useLogOutQuery(undefined,{
       skip: !logout ? true : false
   });
+  console.log(data)
   const logOutHandler = async () => {
-         await signOut();
+          await signOut();
          setLogout(true);
-         toast.success("Logout successful")
   }
 
   if (typeof window !== "undefined") {
@@ -39,6 +39,13 @@ const Profile = ({ user }: Props) => {
       }
     });
   }
+  useEffect(() => {
+     if(isSuccess){
+      signOut();
+      const message = data?.message || "Logout Successful";
+      toast.success(message);
+     }
+  },[isSuccess, data])
   return (
     <div className=" w-[85%] flex mx-auto">
       <div
