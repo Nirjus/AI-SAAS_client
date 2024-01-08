@@ -24,7 +24,7 @@ const Profile = ({ user }: Props) => {
   const {isSuccess,data} = useLogOutQuery(undefined,{
       skip: !logout ? true : false
   });
-  console.log(data)
+ 
   const logOutHandler = async () => {
           await signOut();
          setLogout(true);

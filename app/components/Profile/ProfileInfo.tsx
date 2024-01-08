@@ -18,8 +18,11 @@ const ProfileInfo = ({ user }: Props) => {
   const [address, setAddress] = useState(user?.address);
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber);
   const [image, setImage] = useState<any>(null);
-  const [updateUser,{isSuccess, error}] = useUpdateUserMutation();
-  const {refetch} = useLoaduserQuery(undefined,{refetchOnMountOrArgChange: true});
+  const [loadUser,setLoadUser] = useState(false);
+  const [updateUser,{isSuccess, error, isLoading}] = useUpdateUserMutation();
+  const {} = useLoaduserQuery(undefined,{
+    skip: loadUser ? false : true
+  });
   
   const imageHandeler = (e: any) => {
     const file = e.target.files[0];
@@ -45,7 +48,7 @@ const ProfileInfo = ({ user }: Props) => {
   }
   useEffect(() => {
     if(isSuccess){
-     refetch()
+    setLoadUser(true);
       toast.success("User updated successfully");
     }
     if(error){
@@ -54,7 +57,7 @@ const ProfileInfo = ({ user }: Props) => {
         toast.error(errorData.data.message);
       }
     }
-  },[isSuccess, error, refetch])
+  },[isSuccess, error ])
   return (
     <div className="w-full">
       <form onSubmit={submitHandler} className=" w-full flex flex-col items-center">
@@ -127,7 +130,7 @@ const ProfileInfo = ({ user }: Props) => {
             />
           </div>
           <div className="mt-[20px] pl-4">
-          <button type="submit" className=" active:scale-90 duration-200 w-[150px] p-2 bg-[#000] dark:bg-[#5f0c74] rounded text-[18px] text-white font-[600] font-Poppins">
+          <button type="submit" disabled={isLoading} className=" active:scale-90 duration-200 w-[150px] p-2 bg-[#000] dark:bg-[#5f0c74] rounded text-[18px] text-white font-[600] font-Poppins">
             Update
           </button>
          </div>

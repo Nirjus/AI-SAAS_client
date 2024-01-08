@@ -26,7 +26,7 @@ const Login = ({setRoute, setOpen}: Props) => {
    const [login, {isSuccess, data: loginData,error}] = useLoginMutation();
   const [socialAuth,{isSuccess: socialSuccess,data:socialData, error: socialError}] = useSocialAuthMutation();
    const {data} = useSession();
-
+   console.log(data)
   const formik = useFormik({
     initialValues: {email: "", password: ""},
     validationSchema: schema,
