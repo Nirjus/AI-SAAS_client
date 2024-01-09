@@ -15,7 +15,6 @@ const Page = (props: Props) => {
     const [route, setRoute] = useState("Login");
     const [activeItem, setActiveItem] = useState(6);
     const {user} = useSelector((state:any) => state.auth)
-    const {isLoading} = useLoaduserQuery({});
     
   return (
     <div>
@@ -32,16 +31,8 @@ const Page = (props: Props) => {
         setRoute={setRoute}
         activeItem={activeItem}
         />
-        {
-          isLoading ?
-          (
-            <div className=' w-full h-screen flex justify-center items-center'>
-              <Loader />
-            </div>
-          ): (
             <Profile user={user}/>
-          )
-        }
+      
         <Footer />
       </Protected>
     </div>

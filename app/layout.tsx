@@ -4,10 +4,10 @@ import { ThemeProvider } from 'next-themes'
 import  {Poppins} from "next/font/google"
 import { Josefin_Sans } from 'next/font/google'
 import React, { FC } from 'react';
-import Providers from './Provider'
 import { Toaster } from 'react-hot-toast'
 import { SessionProvider } from 'next-auth/react'
 import CrispProvider from './components/CrispChat'
+import { Providers } from './Provider'
 
 const poppins = Poppins({
   subsets:["latin"],
@@ -30,14 +30,14 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning={true}>
       <CrispProvider />
       <body className={`${poppins.variable} ${josefin.variable} !bg-white bg-no-repeat dark:bg-gradient-to-b dark:from-[#1b0827f3] dark:to-[#000000] duration-300`}>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Providers>
             <SessionProvider>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               {children}
-           </ThemeProvider>
            <Toaster />
        </SessionProvider> 
         </Providers>
+        </ThemeProvider>
         </body>
     </html>
   )
