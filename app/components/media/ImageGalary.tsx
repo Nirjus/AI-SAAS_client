@@ -53,7 +53,7 @@ const ImageGalary = (props: Props) => {
                   <p className=" pl-5 font-semibold text-[#ea3c76] dark:text-[#3faceb]">
                     {img.prompt}
                   </p>
-                  <div className=" flex gap-2">
+                  <div className=" flex gap-2 flex-wrap">
                     {img.image.map((i: any) => (
                       <ImageComponent key={i._id} i={i} width={"w-[160px]"} setImgUr1={setImgUr1} setVisible={setVisible} />
                     ))}

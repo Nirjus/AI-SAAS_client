@@ -88,7 +88,7 @@ const SaveItems = (props: Props) => {
    {
       media === "Images" && (
         <div className=' 800px:w-[90%] w-full max-h-[400px] overflow-y-scroll '>
-      <div className=' flex mt-[20px] gap-2 max-h-[55vh] overflow-y-scroll'>
+      <div className=' flex mt-[20px] flex-wrap gap-2 max-h-[55vh] overflow-y-scroll'>
       {
           itemsWithGivenValue && itemsWithGivenValue.map((image:any, index:number) => (
         <ImageComponent width={"w-[180px]"} key={index} i={image} setVisible={setVisible} setImgUr1={setImgUr1} />
