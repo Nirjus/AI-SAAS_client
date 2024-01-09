@@ -72,7 +72,7 @@ export const VideoComponent = ({video, index}:IVideoPrps) => {
        localStorage.removeItem(videoId);
   }
   useEffect(() => {
-    const item = localStorage.getItem(video._id);
+    const item = localStorage.getItem(video?._id);
    if(item){
     setToggle(true)
    }else{
@@ -85,14 +85,14 @@ export const VideoComponent = ({video, index}:IVideoPrps) => {
     <p className=" pl-5 w-[90%] font-semibold text-[#ea3c76] dark:text-[#3faceb]">{video.prompt}</p>
     {
      toggle ? (
-        <Heart fill='red' className=' w-[10%] cursor-pointer' onClick={() => removeHandler(video._id)}/>
+        <Heart fill='red' className=' w-[10%] cursor-pointer' onClick={() => removeHandler(video?._id)}/>
       ) : (
-        <Heart className=' w-[10%] cursor-pointer' onClick={() => saveHandler(video._id, video.video.url)}/>
+        <Heart className=' w-[10%] cursor-pointer' onClick={() => saveHandler(video?._id, video?.video?.url)}/>
       )
     }
     </div>
       <video controls className=" w-full aspect-video mt-1 ">
-        <source src={video.video.url} />
+        <source src={video?.video?.url} />
       </video>
     </div>
   )

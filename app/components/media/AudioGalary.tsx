@@ -79,7 +79,7 @@ export const MusicComponent = ({audio,index}:ImusicProps) => {
        localStorage.removeItem(audioId);
   }
   useEffect(() => {
-    const item = localStorage.getItem(audio._id);
+    const item = localStorage.getItem(audio?._id);
    if(item){
     setToggle(true)
    }else{
@@ -92,14 +92,14 @@ export const MusicComponent = ({audio,index}:ImusicProps) => {
     <p className=" pl-5 w-[90%] font-semibold text-[#ea3c76] dark:text-[#3faceb]">{audio.prompt}</p>
     {
      toggle ? (
-        <Heart fill='red' className=' w-[10%] cursor-pointer' onClick={() => removeHandler(audio._id)}/>
+        <Heart fill='red' className=' w-[10%] cursor-pointer' onClick={() => removeHandler(audio?._id)}/>
       ) : (
-        <Heart className=' w-[10%] cursor-pointer' onClick={() => saveHandler(audio._id, audio.music.url)}/>
+        <Heart className=' w-[10%] cursor-pointer' onClick={() => saveHandler(audio?._id, audio?.music?.url)}/>
       )
     }
     </div>
       <audio controls className=" w-full mt-1 ">
-        <source src={audio.music.url} />
+        <source src={audio?.music?.url} />
       </audio>
     </div>
   )
