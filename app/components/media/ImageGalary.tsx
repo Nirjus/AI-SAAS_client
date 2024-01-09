@@ -1,4 +1,4 @@
-import {  Download, Eye, X } from 'lucide-react';
+import {  Download, Eye, Heart, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import FileSaver from "file-saver";
@@ -41,13 +41,11 @@ const ImageGalary = (props: Props) => {
         <h1 className=' text-[25px] font-Poppins font-bold text-black dark:text-white underline pb-2'>Best AI Generated Images</h1>
         <p className=' text-[16px] font-Poppins font-semibold text-black dark:text-white'> Generative AI Minjurney, Dall-E</p>
         </div>
-        <div>
+        <div className=' 800px:flex justify-between'>
         <div className=" h-fit w-fit  800px:p-8 p-3 mt-5 rounded-[30px] bg-[#cacaca47] dark:bg-[#0000005e] ">
-        <div className=" flex gap-5 items-center">
           <p className=" py-4 800px:text-[21px] text-[18px] font-Poppins font-semibold text-black dark:text-white">
             List of images you generated
           </p>
-        </div>
           <div className=" w-full max-h-[400px] overflow-y-scroll ">
             {vusial &&
               vusial.map((img: any, index: number) => (
@@ -69,6 +67,14 @@ const ImageGalary = (props: Props) => {
               }
           </div>
 
+      </div>
+      <div className=' border-2 w-fit h-fit border-[#89898988] rounded-[px] 800px:p-10 p-5'>
+           <p className=' text-center font-Poppins 800px:text-[35px] text-[25px] font-extrabold dark:text-white text-fuchsia-800'>
+               {vusial.length !== 0 ? vusial.length : 0}
+           </p>
+           <p className=' text-center font-Poppins 800px:text-[25px] text-[20px] font-extrabold dark:text-white text-green-700'>
+            Total generation
+           </p>
       </div>
         </div>
         {visible && (
@@ -94,8 +100,10 @@ const ImageGalary = (props: Props) => {
     </div>
   )
 }
-const ImageComponent = ({ i, key, setVisible, setImgUr1,width }: IImageProps) => {
+export const ImageComponent = ({ i, key, setVisible, setImgUr1,width }: IImageProps) => {
     const [isHovered, setIsHovered] = useState(false);
+    const [toggle, setToggle] = useState(false);
+
     const handleHover = () => {
       setIsHovered(true);
     };
@@ -106,6 +114,23 @@ const ImageComponent = ({ i, key, setVisible, setImgUr1,width }: IImageProps) =>
     const handleDownload = async (_id:string,photo:string) => {
         FileSaver.saveAs(photo, `download-${_id}.jpg`);
     }
+    const saveHandler = (url: string) => {
+      setToggle(true);
+        localStorage.setItem(url,"images");
+        toast.success("Item saved");
+    }
+    const removeHandler = (url:string) => {
+      setToggle(false);
+         localStorage.removeItem(url);
+    }
+   useEffect(() => {
+    const item = localStorage.getItem(i.url);
+    if(item){
+      setToggle(true)
+    }else{
+      setToggle(false)
+    }
+   },[i])
     return (
       <div
         key={key}
@@ -114,7 +139,7 @@ const ImageComponent = ({ i, key, setVisible, setImgUr1,width }: IImageProps) =>
         onMouseLeave={handleLeave}
       >
         <Image
-          src={i.imageUrl}
+          src={i.url}
           width={500}
           height={500}
           alt="imgName"
@@ -124,17 +149,26 @@ const ImageComponent = ({ i, key, setVisible, setImgUr1,width }: IImageProps) =>
           <div className=" absolute top-0 left-0 w-full h-full bg-transparent backdrop-blur-[1px]">
             <div className=" flex w-full h-full justify-center items-center gap-7">
               <button className=" rounded-full bg-[#ffffff99] p-1"
-              onClick={() => handleDownload(i._id,i.imageUrl)}
+              onClick={() => handleDownload(i._id,i.url)}
               >
                 <Download size={17} color="black" />
               </button>
               <button
                 className="rounded-full bg-[#ffffff99] p-1"
                 onClick={() => {
-                  setVisible(true), setImgUr1(i.imageUrl);
+                  setVisible(true), setImgUr1(i.url);
                 }}
               >
                 <Eye size={17} color="black" />
+              </button>
+              <button className=' rounded-full bg-[#ffffff99] p-1'>
+              {
+      toggle ? (
+        <Heart size={17} color="black"  fill='red' className=' cursor-pointer' onClick={() => removeHandler(i.url)}/>
+      ) : (
+        <Heart size={17} color="black"  className=' cursor-pointer' onClick={() => saveHandler(i.url)}/>
+      )
+    }
               </button>
             </div>
           </div>

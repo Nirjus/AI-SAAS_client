@@ -123,7 +123,7 @@ const VideoGeneration = ({setOpen, setRoute ,refetchCredit}: Props) => {
        </div>
         {videoData && (
           <video controls className=" aspect-video w-full mt-10 800px:px-9 px-5">
-            <source src={videoData?.output} />
+            <source src={videoData?.output.url} />
           </video>
         )}
       </div>

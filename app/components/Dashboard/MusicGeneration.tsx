@@ -45,7 +45,7 @@ const MusicGeneration = ({ setOpen, setRoute,refetchCredit }: Props) => {
       });
     }
   };
-
+console.log(musicData?.output.url)
   useEffect(() => {
     if (isSuccess) {
       refetch();
@@ -156,7 +156,7 @@ const MusicGeneration = ({ setOpen, setRoute,refetchCredit }: Props) => {
         </div>
         {musicData && (
           <audio controls className=" w-full mt-10 800px:px-9 px-5">
-            <source src={musicData?.output} />
+            <source src={musicData?.output.url} />
           </audio>
         )}
       </div>

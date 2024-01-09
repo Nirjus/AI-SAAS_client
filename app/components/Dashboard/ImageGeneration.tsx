@@ -219,7 +219,7 @@ const ImageComponent = ({ i, key, setVisible, setImgUr1,width }: IImageProps) =>
       onMouseLeave={handleLeave}
     >
       <Image
-        src={i.imageUrl}
+        src={i.url}
         width={500}
         height={500}
         alt="imgName"
@@ -229,14 +229,14 @@ const ImageComponent = ({ i, key, setVisible, setImgUr1,width }: IImageProps) =>
         <div className=" absolute top-0 left-0 w-full h-full bg-transparent backdrop-blur-[1px]">
           <div className=" flex w-full h-full justify-center items-center gap-7">
             <button className=" rounded-full bg-[#ffffff99] p-1"
-            onClick={() => handleDownload(i._id,i.imageUrl)}
+            onClick={() => handleDownload(i._id,i.url)}
             >
               <Download size={17} color="black" />
             </button>
             <button
               className="rounded-full bg-[#ffffff99] p-1"
               onClick={() => {
-                setVisible(true), setImgUr1(i.imageUrl);
+                setVisible(true), setImgUr1(i.url);
               }}
             >
               <Eye size={17} color="black" />

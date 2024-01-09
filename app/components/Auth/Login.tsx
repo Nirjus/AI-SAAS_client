@@ -9,10 +9,11 @@ import * as Yup from "yup";
 import { useLoginMutation, useSocialAuthMutation } from '@/redux/features/auth/authApi';
 import toast from 'react-hot-toast';
 import { signIn, useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
 
 type Props = {
-  setRoute: (route: string) => void;
-  setOpen: (open: boolean) => void;
+ setRoute: (route: string) => void;
 }
 
 const schema = Yup.object().shape({
@@ -21,7 +22,7 @@ const schema = Yup.object().shape({
   password: Yup.string().required("Password is required")
   .min(6)
 })
-const Login = ({setRoute, setOpen}: Props) => {
+const Login = ({setRoute}: Props) => {
   const [visible, setVisible] = useState(false);
    const [login, {isSuccess, data: loginData,error}] = useLoginMutation();
   const [socialAuth,{isSuccess: socialSuccess,data:socialData, error: socialError}] = useSocialAuthMutation();
@@ -54,12 +55,13 @@ const Login = ({setRoute, setOpen}: Props) => {
     if(socialSuccess){
       const message = socialData.message || "Login successful";
     toast.success(message);
-    setOpen(false);
-    }
+     redirect("/");
+  }
     if(isSuccess){
       const message = loginData.message || "Login successful";
       toast.success(message);
-      setOpen(false);
+      // setOpen(false);
+      redirect("/");
      }
    if(error){
       if("data" in error){
@@ -73,7 +75,7 @@ const Login = ({setRoute, setOpen}: Props) => {
       toast.error(errorData.data.message);
     }
    }
-  },[isSuccess, error, loginData, setOpen, socialAuth,data,socialData,socialSuccess, socialError])
+  },[isSuccess, error, loginData, socialAuth,data,socialData,socialSuccess, socialError])
 
   const {errors, touched, values, handleChange, handleSubmit} = formik;
 
@@ -125,9 +127,9 @@ const Login = ({setRoute, setOpen}: Props) => {
           <button type="submit" className=' p-2 min-w-[80px] text-white bg-black dark:bg-[#6912cd] rounded-[3px] active:scale-90 duration-200'>
             Login
           </button>
-          <p className='text-[15px] font-[300] cursor-pointer' onClick={() => setRoute("forgot-Password")}>
+          <Link href={"/forgotPassword"} className='text-[15px] font-[300] cursor-pointer'>
            forgot Password ?
-          </p>
+          </Link>
          </div>
          </form>
          <div className=''>
@@ -144,7 +146,7 @@ const Login = ({setRoute, setOpen}: Props) => {
          </div>
          <div className=' pt-7'>
           <p className=' text-center text-[#000000a2] dark:text-[#ffffff78]'>
-            dont have any account? <span onClick={() => setRoute("SignUp")} className=' cursor-pointer dark:text-white text-black'>SignUp</span>
+            dont have any account? <Link href={"/register"} className=' cursor-pointer dark:text-white text-black'>SignUp</Link>
           </p>
          </div>
          

@@ -6,9 +6,11 @@ import { FcGoogle } from "react-icons/fc";
 import { SiGithub } from "react-icons/si";
 import { useFormik } from 'formik';
 import * as Yup from "yup";
-import { useRegisterMutation } from '@/redux/features/auth/authApi';
+import { useRegisterMutation, useSocialAuthMutation } from '@/redux/features/auth/authApi';
 import toast from 'react-hot-toast';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 type Props = {
     setRoute: (route: string) => void;
@@ -25,9 +27,12 @@ const schema = Yup.object().shape({
     .min(6)
   })
 
-const SignUp = ({setRoute, setOpen}: Props) => {
+const SignUp = ({ }: Props) => {
     const [visible, setVisible] = useState(false);
     const [register, {isSuccess,data, error}] = useRegisterMutation();
+    const [socialAuth,{isSuccess: socialSuccess,data:socialData, error: socialError}] = useSocialAuthMutation();
+    const {data:session} = useSession();
+    console.log(session)
   const formik = useFormik({
     initialValues: {name: "",email: "", password: ""},
     validationSchema: schema,
@@ -38,10 +43,22 @@ const SignUp = ({setRoute, setOpen}: Props) => {
   });
 
   useEffect(() => {
+    if(session){
+      socialAuth({
+        email:session?.user?.email,
+        name: session?.user?.name,
+        socialAvatar: session?.user?.image
+       })
+    }
+    if(socialSuccess){
+      const message = socialData.message || "Login successful";
+    toast.success(message);
+     redirect("/");
+  }
     if(isSuccess){
         const message = data?.message as string;
           toast.success(message);
-          setOpen(false);
+         redirect("/login");
     }           
    if(error){
     if("data" in error){
@@ -49,7 +66,7 @@ const SignUp = ({setRoute, setOpen}: Props) => {
         toast.error(errorData.data.message);
     }
    }
-  },[isSuccess, data, error, setOpen])
+  },[isSuccess, session, socialAuth, socialData, socialSuccess, data, error])
 
   const {errors, touched, values, handleChange, handleSubmit} = formik;
 
@@ -117,28 +134,28 @@ const SignUp = ({setRoute, setOpen}: Props) => {
         Register
       </button>
      </div>
+     </form>
      <div className=''>
       
          <p className=' text-center'>---------------- or Join with ----------------</p>
          <div className=' flex gap-7 justify-center pt-6'>
-      <div className=' p-[5px] w-[80px] cursor-pointer flex justify-center items-center rounded border-[#7e7e7e7d] border bg-[#0d0d0d1e] active:bg-[#0d0d0d2f]'
+      <button type="button" className=' p-[5px] w-[80px] cursor-pointer flex justify-center items-center rounded border-[#7e7e7e7d] border bg-[#0d0d0d1e] active:bg-[#0d0d0d2f]'
       onClick={() => signIn("google")}
       >
       <FcGoogle size={30} />
-      </div>
-          <div className=' p-[5px] w-[80px] cursor-pointer flex justify-center items-center rounded border-[#7e7e7e7d] border bg-[#0d0d0d1e] active:bg-[#0d0d0d2f]'
+      </button>
+          <button type="button" className=' p-[5px] w-[80px] cursor-pointer flex justify-center items-center rounded border-[#7e7e7e7d] border bg-[#0d0d0d1e] active:bg-[#0d0d0d2f]'
           onClick={() => signIn("github")}
           >
           <SiGithub size={28}/>
-          </div>
+          </button>
          </div>
      </div>
      <div className=' pt-7'>
       <p className=' text-center text-[#000000a2] dark:text-[#ffffff78]'>
-        already have any account? <span onClick={() => setRoute("Login")} className=' cursor-pointer text-black dark:text-white'>SignIn</span>
+        already have any account? <Link href={"/login"} className=' cursor-pointer text-black dark:text-white'>SignIn</Link>
       </p>
      </div>
-       </form>
     </div>
 </div>
   )

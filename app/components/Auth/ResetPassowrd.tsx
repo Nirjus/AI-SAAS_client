@@ -24,7 +24,7 @@ const ResetPassowrd = ({token, setOpen }: Props) => {
     useEffect(() => {
     if(isSuccess){
         setOpen(false);
-        redirect("/");
+        redirect("/login");
         const message = data?.message;
         toast.success(message);
     }
@@ -39,7 +39,7 @@ const ResetPassowrd = ({token, setOpen }: Props) => {
    <div>
        <form action="" onSubmit={submitHandler}>
       <h1 className=" text-center font-[600] font-Poppins text-[20px]">
-        Enter your Password
+        Enter your New Password
       </h1>
      <div className=' relative'>
      <input

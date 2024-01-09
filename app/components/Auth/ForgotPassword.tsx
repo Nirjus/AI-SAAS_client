@@ -1,14 +1,13 @@
 import { style } from "@/app/styles/style";
 import { useForgotPasswordMutation } from "@/redux/features/user/userApi";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 type Props = {
-  setRoute: (route: string) => void;
-  setOpen: (open: boolean) => void;
 };
 
-const ForgotPassword = ({ setOpen, setRoute }: Props) => {
+const ForgotPassword = ({ }: Props) => {
   const [email, setEmail] = useState("");
   const [forgotPassword, { isSuccess,isLoading, data, error }] =
     useForgotPasswordMutation();
@@ -18,7 +17,6 @@ const ForgotPassword = ({ setOpen, setRoute }: Props) => {
   };
   useEffect(() => {
     if (isSuccess) {
-      setOpen(false);
       const message = data?.message || "";
       toast.success(message);
     }
@@ -28,7 +26,7 @@ const ForgotPassword = ({ setOpen, setRoute }: Props) => {
         toast.error(errorMessage.data.message);
       }
     }
-  }, [isSuccess, data, error, setOpen]);
+  }, [isSuccess, data, error]);
   return (
     <div>
       <form action="" onSubmit={submitHandler}>
@@ -51,12 +49,12 @@ const ForgotPassword = ({ setOpen, setRoute }: Props) => {
           >
             submit
           </button>
-          <p
+          <Link
+           href={"/login"}
             className=" text-[16px] cursor-pointer font-[600] text-[#464646] dark:text-[#b0afaf]"
-            onClick={() => setRoute("Login")}
           >
             back to signIn
-          </p>
+          </Link>
         </div>
       </form>
     </div>

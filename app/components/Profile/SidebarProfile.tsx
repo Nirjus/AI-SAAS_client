@@ -16,7 +16,7 @@ type Props = {
 const SidebarProfile = ({ user, active, setActive, setOpen, logoutHandler }: Props) => {
  
   return (
-    <div className=" w-full font-Poppins bg-white dark:bg-[#290329] border border-[#8382827b]">
+    <div className=" w-full h-full font-Poppins bg-white dark:bg-[#290329] border border-[#8382827b]">
       <div
         className={`flex p-1 cursor-pointer items-center gap-3 border border-[#8787878a] rounded ${
           active === 1 ? "bg-[#0000002c] dark:bg-[#ffffff19]" : "bg-transparent"

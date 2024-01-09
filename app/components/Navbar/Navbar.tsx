@@ -10,7 +10,7 @@ import ForgotPassword from "../../components/Auth/ForgotPassword";
 import { useSelector } from "react-redux";
 import Image from "next/image";
 import avatar from "../../../public/images/avatar.png";
-import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 type Props = {
   activeItem: number;
@@ -25,7 +25,6 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
   const [openSideBar, setOpenSideBar] = useState(false);
   const [reverse, setReverse] = useState(false);
   const {user} = useSelector((state:any) => state.auth);
-  const {data} = useSession();
    const sideBar = (e:any) => {
         if(e.target.id === "mobileHeader"){
           setReverse(true);
@@ -34,9 +33,6 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
             },460);
         }
    }
-    if(!user && data){
-      setOpen(true);
-    } 
   const navItem = [
     {
       name: "Home",
@@ -87,11 +83,12 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
                      />  
                     </Link>
               ) : (
+               <Link href={"/login"}>
                 <FaRegUserCircle
               size={35}
               className=" text-black dark:text-white cursor-pointer"
-              onClick={() => setOpen(true)}
                 />
+               </Link>
               )
             }
           </div>
@@ -133,11 +130,12 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
                      />  
                     </Link>
               ) : (
+               <Link href={"/login"}>
                 <FaRegUserCircle
               size={35}
               className=" text-black dark:text-white cursor-pointer"
-              onClick={() => setOpen(true)}
             />
+               </Link>
               )
             }
               </div>
@@ -145,54 +143,6 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
           </div>
         )}
       </div>
-      {
-       route === "Login" && (
-        <>
-        {
-            open && (
-                <CustomModal
-                  open={open}
-                  setOpen={setOpen}
-                  setRoute={setRoute}
-                  component={Login}
-                />
-            )
-        }
-        </>
-       )
-      }
-      {
-       route === "SignUp" && (
-        <>
-        {
-            open && (
-                <CustomModal
-                  open={open}
-                  setOpen={setOpen}
-                  setRoute={setRoute}
-                  component={SignUp}
-                />
-            )
-        }
-        </>
-       )
-      }
-       {
-       route === "forgot-Password" && (
-        <>
-        {
-            open && (
-                <CustomModal
-                  open={open}
-                  setOpen={setOpen}
-                  setRoute={setRoute}
-                  component={ForgotPassword}
-                />
-            )
-        }
-        </>
-       )
-      }
     </>
   );
 };
