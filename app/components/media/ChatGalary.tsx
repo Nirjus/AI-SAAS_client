@@ -86,13 +86,13 @@ const ChatGalary = (props: Props) => {
                   >
                   {msg.answer || ""}
                   </ReactMarkdown>
-                  <button className=' p-1 border border-black dark:border-white absolute left-5 top-20'
+                  <button className=' p-1 border border-black dark:border-white absolute left-[15px] top-[60px]'
             onClick={() => copyText() }
           >
             <PencilIcon size={15} className=' text-black dark:text-white' />
           </button>
                  </div>
-                 <p className=' bg-[#00000015] dark:bg-[#5fffff0a] pl-5 rounded'>created : {format(msg.createdAt)}</p>
+                 <p className=' bg-[#00000015] dark:bg-[#5fffff0a] pl-[60px] rounded'>created : {format(msg.createdAt)}</p>
                 </div>
                 ))}
                 {

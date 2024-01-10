@@ -16,9 +16,14 @@ type Props = {
   setRoute: any;
   refetchCredit: any;
 }
+type Message = {
+  role: string;
+  content: string;
+};
 
 const Conversation = ({setOpen, setRoute, refetchCredit}: Props) => {
   const [message, setMessage] = useState("");
+  const [conversation, setConversation] = useState<Message[]>([]);
   const [createConversation,{isSuccess, data:messageData,isLoading,error}] = useCreateConversationMutation();
   const { refetch} = useGetAllConversationQuery({},{refetchOnMountOrArgChange:true});
   const {user} = useSelector((state: any) => state.auth);
@@ -31,9 +36,21 @@ const Conversation = ({setOpen, setRoute, refetchCredit}: Props) => {
     setOpen(true);
     setRoute("Login");
    }else{
-   await createConversation(message);
+    try {
+      const response = await createConversation(message);
+      if ('data' in response && response.data) {
+        // Update the conversation state with the new message
+        setConversation([...conversation, { role: 'user', content: message }, { role: 'assistant', content: response.data.output }]);
+        // Clear the input field
+        setMessage("");
+      }
+    } catch (error) {
+      console.error('Error creating conversation:', error);
+      // Handle error appropriately, e.g., show a toast
+    }
+  }
    }
- }
+ 
  useEffect(() => {
   if(isSuccess){
     refetch();
@@ -64,7 +81,7 @@ const Conversation = ({setOpen, setRoute, refetchCredit}: Props) => {
       console.error('Unable to copy text to clipboard', error);
     }
   }
-
+  console.log(conversation)
   return (
     <div>
         <DashboardHeading
@@ -98,15 +115,14 @@ const Conversation = ({setOpen, setRoute, refetchCredit}: Props) => {
               </div>
             </form>
         </div>
-        <div className=" 1000px:flex justify-between gap-3">
-      <div className=" 1000px:w-[55%]">
+        <div className=" 1000px:flex mt-[20px] justify-between gap-3">
+      <div className=" 1200px:w-[75%] px-4 lg:px-8">
         {isLoading && (
-          <div className=" w-full h-full flex justify-center items-center">
+          <div className=" w-full h-fit my-3 flex justify-center items-center">
             <Loader />
           </div>
         )}
-       <div className={`${!messageData && "min-h-[300px]"}`}>
-       {!message && !isLoading && (
+       {conversation.length === 0 && !isLoading && (
           <div className=" w-full flex flex-col justify-center items-center">
             <Image
               src={require("../../../public/images/chat3D.png")}
@@ -120,12 +136,18 @@ const Conversation = ({setOpen, setRoute, refetchCredit}: Props) => {
             </p>
           </div>
         )}
-       </div>
-        {messageData && (
-        <div className=' w-full relative flex gap-4 mt-10 800px:p-5 p-3 bg-slate-100 dark:bg-[#bd64d81e] rounded-[6px]'>
-          <Image src={require("../../../public/images/logo.png")} alt='logo png' width={500} height={500} className='w-10 h-10 rounded-full' />
+       <div className= {` ${conversation.length !== 0 && "h-[75vh]"} overflow-y-scroll`}>
+       {conversation.map((item, index) => (
+            <div key={index} className={`w-full relative flex gap-4 mt-2 800px:p-5 p-3 bg-slate-100 dark:bg-[#bd64d81e] rounded-[6px]`}>
+         {
+          item.role === "assistant" ? (
+            <Image src={require("../../../public/images/logo.png")} alt='logo png' width={500} height={500} className='w-10 h-10 rounded-full' />
+          ) : (
+            <p className=' bg-cyan-500 w-10 h-10 text-center p-2 rounded-full'>{user?.name[0]}</p>
+          )
+         }
             <p ref={pRef} className=" hidden ">
-            {messageData?.output}
+            {item?.content}
           </p>
           <ReactMarkdown components={{
                     ol: ({node, ...props}) => (
@@ -143,17 +165,22 @@ const Conversation = ({setOpen, setRoute, refetchCredit}: Props) => {
                       <code className=" bg-black/10 rounded-lg text-[#531414] dark:text-[#bfd1ff] p-1" {...props} />
                     )
                   }}
-                   className={" text-sm overflow-hidden leading-7 w-[85%]"}
+                   className={`text-sm overflow-hidden leading-7 w-[85%] ${item?.role === "user" && " dark:text-white text-black text-[20px] font-Poppins font-bold"}`}
                   >
-                  {messageData?.output || ""}
+                  {item?.content || ""}
                   </ReactMarkdown>
-          <button className=' p-1 border border-black dark:border-white absolute left-5 top-20'
+        {
+          item.role === "assistant" && (
+            <button className=' p-1 border border-black dark:border-white absolute left-5 top-20'
             onClick={() => copyText() }
           >
             <PencilIcon size={15} className=' text-black dark:text-white' />
           </button>
+          )
+        }
         </div>
-        )}
+        ))}
+       </div>
       </div>
   
         </div>

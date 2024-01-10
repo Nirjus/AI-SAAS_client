@@ -32,7 +32,11 @@ const Page = (props: Props) => {
         activeItem={activeItem}
         />
         {
-          isLoading ? <Loader /> :  <Profile user={user}/>
+          isLoading ? (
+            <div className=' w-full h-screen flex justify-center items-center'>
+              <Loader />
+            </div>
+          ) :  <Profile user={user}/>
         }
       
         <Footer />
