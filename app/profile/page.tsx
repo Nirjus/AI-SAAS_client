@@ -15,7 +15,7 @@ const Page = (props: Props) => {
     const [route, setRoute] = useState("Login");
     const [activeItem, setActiveItem] = useState(6);
     const {user} = useSelector((state:any) => state.auth)
-    
+    const {isLoading} = useLoaduserQuery({});
   return (
     <div>
       <Protected>
@@ -31,7 +31,9 @@ const Page = (props: Props) => {
         setRoute={setRoute}
         activeItem={activeItem}
         />
-            <Profile user={user}/>
+        {
+          isLoading ? <Loader /> :  <Profile user={user}/>
+        }
       
         <Footer />
       </Protected>
