@@ -11,6 +11,9 @@ import { useSelector } from "react-redux";
 import Image from "next/image";
 import avatar from "../../../public/images/avatar.png";
 import { redirect } from "next/navigation";
+import { useLogOutQuery } from "@/redux/features/auth/authApi";
+import { signOut } from "next-auth/react";
+import { LogOut, User2 } from "lucide-react";
 
 type Props = {
   activeItem: number;
@@ -25,6 +28,11 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
   const [openSideBar, setOpenSideBar] = useState(false);
   const [reverse, setReverse] = useState(false);
   const {user} = useSelector((state:any) => state.auth);
+  const [openoption, setOpenoption] = useState(false);
+  const [logout, setLogout] = useState(false);
+  const {isSuccess,data} = useLogOutQuery(undefined,{
+      skip: !logout ? true : false
+  });
    const sideBar = (e:any) => {
         if(e.target.id === "mobileHeader"){
           setReverse(true);
@@ -33,6 +41,12 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
             },460);
         }
    }
+   const logOutHandler = async () => {
+    await signOut();
+   setLogout(true);
+   setOpenoption(false);
+}
+
   const navItem = [
     {
       name: "Home",
@@ -72,16 +86,14 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
       <div className=" mt-1">
          <ThemeSwitcher />
          </div>
-          <div className=" ml-2 mr-4 max-800px:hidden">
+          <div className=" ml-2 mr-4 relative max-800px:hidden">
             {
               user ? (
-                    <Link href={"/profile"}>
                      <Image src={user?.avatar ? user?.avatar?.url : user?.socialAvatar ? user?.socialAvatar : avatar} alt="avatar" 
                      width={500} height={500}
-                     className={`w-10 h-10 rounded-full object-cover ${activeItem === 6 && "border dark:border-[#19d7da] border-[#ff2e2e]"}`}
-                     onClick={() => setActiveItem(6)}
-                     />  
-                    </Link>
+                     className={`w-10 h-10 rounded-full cursor-pointer object-cover ${activeItem === 6 && "border dark:border-[#19d7da] border-[#ff2e2e]"}`}
+                     onClick={() =>  setOpenoption(!openoption)}
+                     />
               ) : (
                <Link href={"/login"}>
                 <FaRegUserCircle
@@ -89,6 +101,14 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
               className=" text-black dark:text-white cursor-pointer"
                 />
                </Link>
+              )
+            }
+            {
+              openoption && (
+                <div  className=" w-fit absolute top-[40px] right-[20px] text-black font-semibold p-2 rounded-lg bg-[#dedede]">
+                 <p className=" cursor-pointer  p-2 flex items-center hover:bg-[#c4c3c3] rounded-lg gap-2" onClick={() =>setOpenoption(false)}><Link href={"/profile"}>Profile</Link> <User2 /> </p>
+                 <p className=" cursor-pointer  p-2 flex items-center gap-2 hover:bg-[#c4c3c3] rounded-lg" onClick={() => logOutHandler()}>Logout <LogOut /></p>
+               </div>
               )
             }
           </div>
@@ -119,16 +139,14 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
                   </div>
                 ))}
               </div>
-              <div className=" flex justify-center my-[100px]">
+              <div className=" flex relative justify-center my-[100px]">
               {
               user ? (
-                    <Link href={"/profile"}>
                      <Image src={user?.avatar ? user?.avatar?.url : user?.socialAvatar ? user?.socialAvatar : avatar} alt="avatar" 
                      width={500} height={500}
-                     className={`w-10 h-10 rounded-full object-cover ${activeItem === 6 && "border dark:border-[#19d7da] border-[#ff2e2e]"}`}
-                     onClick={() => setActiveItem(6)}
+                     className={`w-10 h-10 cursor-pointer rounded-full object-cover ${activeItem === 6 && "border dark:border-[#19d7da] border-[#ff2e2e]"}`}
+                     onClick={() => setOpenoption(!openoption)}
                      />  
-                    </Link>
               ) : (
                <Link href={"/login"}>
                 <FaRegUserCircle
@@ -136,6 +154,14 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
               className=" text-black dark:text-white cursor-pointer"
             />
                </Link>
+              )
+            }
+            {
+               openoption && (
+                <div  className=" w-fit absolute top-[40px] right-1/2 text-black font-semibold p-2 rounded-lg bg-[#dedede]">
+                <p className=" cursor-pointer  p-2 flex items-center hover:bg-[#c4c3c3] rounded-lg gap-2" onClick={() =>setOpenoption(false)}><Link href={"/profile"}>Profile</Link> <User2 /> </p>
+                 <p className=" cursor-pointer  p-2 flex items-center gap-2 hover:bg-[#c4c3c3] rounded-lg" onClick={() => logOutHandler()}>Logout <LogOut /></p>
+              </div>
               )
             }
               </div>

@@ -4,16 +4,18 @@ import avatar from "../../../public/images/avatar.png";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdLogout, MdOutlinePersonRemove, MdOutlineSubscriptions } from "react-icons/md";
 import {HiOutlineSaveAs} from "react-icons/hi";
+import Link from "next/link";
+import { Undo2 } from "lucide-react";
 
 type Props = {
   user: any;
   active: number;
   setActive: (active: number) => void;
   setOpen: (open: boolean) => void;
-  logoutHandler: any;
+  // logoutHandler: any;
 };
 
-const SidebarProfile = ({ user, active, setActive, setOpen, logoutHandler }: Props) => {
+const SidebarProfile = ({ user, active, setActive, setOpen }: Props) => {
  
   return (
     <div className=" w-full h-full font-Poppins bg-white dark:bg-[#290329] border border-[#8382827b]">
@@ -73,17 +75,17 @@ const SidebarProfile = ({ user, active, setActive, setOpen, logoutHandler }: Pro
           Save Items
         </p>
       </div>
-      <div
+      <Link
+      href={"/"}
         className={`flex p-2 items-center gap-3 cursor-pointer rounded ${
           active === 5 ? "bg-[#0000002c] dark:bg-[#ffffff23]" : "bg-transparent"
         }`}
-        onClick={() => logoutHandler()}
       >
-        <MdLogout size={30} className=" text-[#df6478]" />
+        <Undo2 size={30} className=" text-[#df6478]" />
         <p className=" text-black dark:text-white font-[600] 800px:block hidden text-[18px]">
-          Logout
+          Return
         </p>
-      </div>
+      </Link>
       <div
         className={`flex p-2 items-center gap-3 cursor-pointer rounded  ${
           active === 6 ? "bg-[#0000002c] dark:bg-[#ffffff23]" : "bg-transparent"

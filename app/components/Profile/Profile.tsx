@@ -11,6 +11,7 @@ import { useLogOutQuery } from "@/redux/features/auth/authApi";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useCheckSubscriptionQuery } from "@/redux/features/subscription/subscriptionApi";
+import { redirect } from "next/navigation";
 
 type Props = {
   user: any;
@@ -22,15 +23,6 @@ const Profile = ({ user }: Props) => {
   const [open, setOpen] = useState(true);
   const [isPro, setIsPro] = useState(false);
   const {data: validity} = useCheckSubscriptionQuery({}); 
-  const [logout, setLogout] = useState(false);
-  const {isSuccess,data} = useLogOutQuery(undefined,{
-      skip: !logout ? true : false
-  });
- 
-  const logOutHandler = async () => {
-          await signOut();
-         setLogout(true);
-  }
 
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {
@@ -42,14 +34,11 @@ const Profile = ({ user }: Props) => {
     });
   }
   useEffect(() => {
-     if(isSuccess){
-      const message = data?.message || "Logout Successful";
-      toast.success(message);
-     }
+
      if(validity){
       setIsPro(validity?.isValid);
       }
-  },[isSuccess, data, validity])
+  },[ validity])
   return (
     <div className=" w-[85%] flex mx-auto">
       <div
@@ -62,7 +51,6 @@ const Profile = ({ user }: Props) => {
           active={active}
           setActive={setActive}
           setOpen={setOpen}
-          logoutHandler={logOutHandler}
         />
       </div>
       <div className=" mb-[80px] mt-[160px] px-[20px] w-full bg-transparent">
