@@ -106,7 +106,7 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
             {
               openoption && (
                 <div  className=" w-fit absolute top-[40px] right-[20px] text-black font-semibold p-2 rounded-lg bg-[#dedede]">
-                 <p className=" cursor-pointer  p-2 flex items-center hover:bg-[#c4c3c3] rounded-lg gap-2" onClick={() =>setOpenoption(false)}><Link href={"/profile"}>Profile</Link> <User2 /> </p>
+                 <Link href={"/profile"} className=" cursor-pointer  p-2 flex items-center hover:bg-[#c4c3c3] rounded-lg gap-2" onClick={() =>setOpenoption(false)}>Profile <User2 /> </Link>
                  <p className=" cursor-pointer  p-2 flex items-center gap-2 hover:bg-[#c4c3c3] rounded-lg" onClick={() => logOutHandler()}>Logout <LogOut /></p>
                </div>
               )
