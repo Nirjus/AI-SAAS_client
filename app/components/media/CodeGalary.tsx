@@ -1,7 +1,8 @@
+import { style } from '@/app/styles/style';
 import { useGetAllcodesQuery } from '@/redux/features/code/codeApi';
-import { PencilIcon } from 'lucide-react';
+import { Copy, Search } from 'lucide-react';
 import Image from 'next/image';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import ReactMarkdown from "react-markdown";
 import { useSelector } from 'react-redux';
@@ -10,11 +11,28 @@ import { format } from 'timeago.js';
 type Props = {}
 
 const CodeGalary = (props: Props) => {
-  const [getMsg, setGetMsg] = useState([]);
+  const [getMsg, setGetMsg] = useState<any>([]);
+  const [searchData, setSearchData] = useState([]);
+  const [object, setObject] = useState<any>([]);
+  const [select, setSelect] = useState(false);
   const {data, refetch, error} = useGetAllcodesQuery({},{refetchOnMountOrArgChange:true});
   const {user} = useSelector((state: any) => state.auth);
-  const pRef = useRef<HTMLParagraphElement | null>(null);
+   const [text, setText] = useState("");
 
+  const onChangeHandler = (e:any) => {
+      const term = e.target.value;
+      term === "" ? setSelect(false) : setSelect(true);
+      setText(term);
+      const filteredItems = data && data?.codesArray.filter((code:any) =>
+        code.prompt.toLowerCase().includes(term.toLowerCase())
+      );
+     setSearchData(filteredItems);
+  }
+  const selectHandler = (data:any) => {
+    setObject([data]);
+    setText(data?.prompt);
+    setSelect(false);
+  }
   useEffect(() => {
      if(error){
       if("data" in error){
@@ -27,12 +45,12 @@ const CodeGalary = (props: Props) => {
       setGetMsg(data?.codesArray);
      }
    },[error,refetch, data])
-   const copyText = async () => {
+   const copyText = async (text:string) => {
     try {
-      const textToCopy = pRef.current?.innerText;
+      const textToCopy = text;
       if(textToCopy){
       await navigator.clipboard.writeText(textToCopy);
-      alert('Text copied to clipboard!');
+      toast.success("Text copied to clipboard!");
       }else{
         console.warn('Text element is null or empty');
       }
@@ -42,11 +60,39 @@ const CodeGalary = (props: Props) => {
   }
   return (
     <div className=' w-full'>
-         <div className=' 800px:pl-[30px]'>
+      <div className=' 800px:flex justify-between w-full'>
+         <div className=' 800px:pl-[30px] 800px:w-[50%]'>
         <h1 className=' text-[25px] font-Poppins font-bold text-black dark:text-white underline pb-2'>Best AI Generated Codes</h1>
         <p className=' text-[16px] font-Poppins font-semibold text-black dark:text-white'> Code solution with comment explanation</p>
         </div>
-        <div className=" 1000px:w-[75%] m-auto h-fit sticky mt-10 800px:p-7 p-4 rounded-[30px] bg-[#cacaca47] dark:bg-[#0000005e] ">
+       <div className=' relative mt-3 w-full 800px:w-[50%]'>
+       <div className=' flex '>
+          <input type="text"
+          placeholder='Seach here..'
+          value={text}
+          onChange={onChangeHandler}
+          className={`${style.input} !w-full dark:!bg-[#130645ac] `}
+          />
+          <button className='p-3 rounded-[5px] border border-[#85858583] active:bg-slate-200 active:dark:bg-slate-950'
+           onClick={() => setGetMsg(object)}
+          ><Search /></button>
+        </div>
+        {
+         select && searchData && searchData.length !== 0 && (
+            <div className=' absolute left-0 top-14 w-full shadow-2xl z-10  bg-slate-100 dark:bg-[#210846] max-h-[400px] overflow-y-scroll'>
+              {
+                searchData && searchData.map((item:any) => (
+                  <div key={item._id} className=' p-2 py-3 border-b border-b-black dark:border-b-white'>
+                     <p className=' cursor-pointer' onClick={() => selectHandler(item)}>{item.prompt}</p>
+                  </div>
+                ))
+              }
+            </div>
+          )
+        }
+       </div>
+       </div>
+        <div className=" 1000px:w-[75%] m-auto h-fit mt-10 800px:p-7 p-4 rounded-[30px] bg-[#cacaca47] dark:bg-[#0000005e] ">
           <div className=" flex gap-5 items-center">
             <p className=" py-4 800px:text-[21px] text-[18px] font-Poppins font-semibold text-black dark:text-white">
                Code Generation
@@ -64,9 +110,6 @@ const CodeGalary = (props: Props) => {
                 </div>
                  <div className=' flex relative justify-between mt-2 gap-2 p-2 rounded-[6px] bg-white dark:bg-[#38035630] items-start'>
                   <Image src={require("../../../public/images/logo.png")} alt='logo png' width={500} height={500} className='w-10 h-10 rounded-full' />
-                     <p ref={pRef} className=" hidden ">
-                     {msg.solution}
-                   </p>
                   <ReactMarkdown components={{
                      ol: ({node, ...props}) => (
                       <ol className=' list-decimal list-inside ' {...props}></ol>
@@ -88,9 +131,9 @@ const CodeGalary = (props: Props) => {
                   {msg.solution || ""}
                   </ReactMarkdown>
                   <button className=' p-1 border border-black dark:border-white absolute left-[15px] top-[60px]'
-            onClick={() => copyText() }
+            onClick={() => copyText(msg.solution) }
           >
-            <PencilIcon size={15} className=' text-black dark:text-white' />
+            <Copy size={15} className=' text-black dark:text-white' />
           </button>
                  </div>
                  <p className='bg-[#00000015] pl-[60px] dark:bg-[#5fffff0a] rounded'>created : {format(msg.createdAt)}</p>

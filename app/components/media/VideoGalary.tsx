@@ -1,5 +1,6 @@
+import { style } from '@/app/styles/style';
 import { useGetAllVideoQuery } from '@/redux/features/video/videoApi';
-import { Heart } from 'lucide-react';
+import { Heart, Search } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 
@@ -9,8 +10,27 @@ interface IVideoPrps{
   index: number;
 }
 const VideoGalary = (props: Props) => {
-    const [vusial, setVusial] = useState([]);
+    const [vusial, setVusial] = useState<any>([]);
+    const [searchData, setSearchData] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [select, setSelect] = useState(false);
+    const [object, setObject] = useState<any>([]);
     const {data, refetch, error} = useGetAllVideoQuery({}, {refetchOnMountOrArgChange:true})
+
+    const handleSearchChange = (e:any) => {
+      const term = e.target.value;
+      term === "" ? setSelect(false) : setSelect(true);
+      setSearchTerm(term);
+        const filteredData = data && data?.videos.filter((img:any) => 
+           img.prompt.toLowerCase().includes(term.toLowerCase())
+        );
+        setSearchData(filteredData);
+    }
+    const handleSelect = (data:any) => {
+     setObject([data]);
+      setSearchTerm(data?.prompt);
+      setSelect(false);
+    }
     useEffect(() => {
         if(error){
           if("data" in error){
@@ -47,14 +67,41 @@ const VideoGalary = (props: Props) => {
                 }
             </div>
         </div>
-        <div className=' mt-10 border-2 w-fit h-fit border-[#89898988] rounded-[px] 800px:p-10 p-5'>
+        <div className=' max-800px:flex justify-between items-center'>
+        <div className=' mt-10 border-2 w-fit h-fit border-[#89898988]  800px:p-10 p-5'>
            <p className=' text-center font-Poppins 800px:text-[35px] text-[25px] font-extrabold dark:text-white text-fuchsia-800'>
-               {vusial.length !== 0 ? vusial.length : 0}
+               {data?.videos.length !== 0 ? data?.videos.length : 0}
            </p>
            <p className=' text-center font-Poppins 800px:text-[25px] text-[20px] font-extrabold dark:text-white text-green-700'>
             Total generation
            </p>
       </div>
+      <div className=' my-[25px] relative'>
+             <div className=' flex items-center '>
+              <input type="text" name=""
+               placeholder='Search videos..'
+               value={searchTerm}
+               onChange={handleSearchChange} 
+               id="" className={`${style.input} dark:!bg-[#1f093d] !w-full`} />
+              <button className='border border-[#8b8b8b8e] p-3 rounded-[5px] active:dark:bg-slate-900 active:bg-slate-200'
+              onClick={() => setVusial(object)}
+              ><Search /></button>
+             </div>
+             {
+               select && searchData && searchData.length !== 0 && (
+                <div className=' shadow absolute left-0 top-14 h-auto max-h-[300px] overflow-y-scroll w-full'>
+                   {
+                    searchData && searchData.map((data:any) => (
+                      <div key={data._id} className=' dark:!bg-[#1f093d] border-b border-b-black dark:border-b-white p-2 bg-slate-200'>
+                     <p onClick={() => handleSelect(data)} className=' cursor-pointer'>{data.prompt}</p>
+                      </div>
+                    ))
+                   }
+                </div>
+               )
+             }
+         </div>
+        </div>
         </div>
     </div>
   )
@@ -91,7 +138,7 @@ export const VideoComponent = ({video, index}:IVideoPrps) => {
       )
     }
     </div>
-      <video controls className=" w-full aspect-video mt-1 ">
+      <video controls  src={video?.video?.url} className=" w-full aspect-video mt-1 ">
         <source src={video?.video?.url} />
       </video>
     </div>

@@ -25,7 +25,7 @@ const SaveItems = (props: Props) => {
     const url:any = localStorage.key(i);
     const storedValue = localStorage.getItem(url);
     if (storedValue === "images") {
-      const randomId = Math.floor(Math.random() * 1000);
+      const randomId = Math.floor(Math.random() * 100000);
       const itemObject = {url, _id:randomId}
       itemsWithGivenValue.push(itemObject);
     }

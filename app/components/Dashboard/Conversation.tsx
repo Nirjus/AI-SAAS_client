@@ -1,6 +1,6 @@
 import DashboardHeading from '@/app/utils/DashboardHeading'
-import { MessageSquare, PencilIcon } from 'lucide-react'
-import React, { useState,useEffect, useRef } from 'react'
+import { Copy, MessageSquare } from 'lucide-react'
+import React, { useState,useEffect } from 'react'
 import { style } from '@/app/styles/style';
 import { useCreateConversationMutation, useGetAllConversationQuery } from '@/redux/features/conversation/conversationApi';
 import toast from 'react-hot-toast';
@@ -27,7 +27,6 @@ const Conversation = ({setOpen, setRoute, refetchCredit}: Props) => {
   const [createConversation,{isSuccess, data:messageData,isLoading,error}] = useCreateConversationMutation();
   const { refetch} = useGetAllConversationQuery({},{refetchOnMountOrArgChange:true});
   const {user} = useSelector((state: any) => state.auth);
-  const pRef = useRef<HTMLParagraphElement | null>(null);
   const {data: creditData} = useGetCreditCountQuery({});
 
  const handleSubmit = async (e:any) => {
@@ -68,9 +67,9 @@ const Conversation = ({setOpen, setRoute, refetchCredit}: Props) => {
   }
  },[error, isSuccess, refetch, refetchCredit, creditData, setOpen, setRoute])
  
-  const copyText = async () => {
+  const copyText = async (text:string) => {
     try {
-      const textToCopy = pRef.current?.innerText;
+      const textToCopy = text;
       if(textToCopy){
       await navigator.clipboard.writeText(textToCopy);
       alert('Text copied to clipboard!');
@@ -146,9 +145,6 @@ const Conversation = ({setOpen, setRoute, refetchCredit}: Props) => {
             <p className=' bg-cyan-500 w-10 h-10 text-center p-2 rounded-full'>{user?.name[0]}</p>
           )
          }
-            <p ref={pRef} className=" hidden ">
-            {item?.content}
-          </p>
           <ReactMarkdown components={{
                     ol: ({node, ...props}) => (
                       <ol className=' list-decimal list-inside ' {...props}></ol>
@@ -172,9 +168,9 @@ const Conversation = ({setOpen, setRoute, refetchCredit}: Props) => {
         {
           item.role === "assistant" && (
             <button className=' p-1 border border-black dark:border-white absolute left-5 top-20'
-            onClick={() => copyText() }
+            onClick={() => copyText(item?.content) }
           >
-            <PencilIcon size={15} className=' text-black dark:text-white' />
+            <Copy size={15} className=' text-black dark:text-white' />
           </button>
           )
         }

@@ -1,6 +1,6 @@
 import DashboardHeading from '@/app/utils/DashboardHeading'
-import { Code2, PencilIcon } from 'lucide-react'
-import React, { useState,useEffect, useRef } from 'react'
+import { Code2, Copy } from 'lucide-react'
+import React, { useState,useEffect } from 'react'
 import { style } from '@/app/styles/style';
 import toast from 'react-hot-toast';
 import Loader from '../Loader';
@@ -26,7 +26,6 @@ const CodeGeneration = ({setOpen, setRoute, refetchCredit}: Props) => {
   const [codeCreation,{isSuccess, data:messageData,isLoading,error}] = useCodeCreationMutation();
   const { refetch} = useGetAllcodesQuery({},{refetchOnMountOrArgChange:true});
   const {user} = useSelector((state: any) => state.auth);
-  const pRef = useRef<HTMLParagraphElement | null>(null);
   const {data: creditData} = useGetCreditCountQuery({})
  const handleSubmit = async (e:any) => {
   e.preventDefault();
@@ -62,9 +61,9 @@ const CodeGeneration = ({setOpen, setRoute, refetchCredit}: Props) => {
     setRoute("pro-modal");
   }
  },[error, isSuccess, refetch, refetchCredit, creditData, setRoute, setOpen])
-  const copyText = async () => {
+  const copyText = async (text:string) => {
     try {
-      const textToCopy = pRef.current?.innerText;
+      const textToCopy = text;
       if(textToCopy){
       await navigator.clipboard.writeText(textToCopy);
       alert('Text copied to clipboard!');
@@ -140,9 +139,6 @@ const CodeGeneration = ({setOpen, setRoute, refetchCredit}: Props) => {
             <p className=' bg-cyan-500 w-10 h-10 text-center p-2 rounded-full'>{user?.name[0]}</p>
           )
          }
-            <p ref={pRef} className=" hidden ">
-            {item?.content}
-          </p>
           <ReactMarkdown components={{
                     ol: ({node, ...props}) => (
                       <ol className=' list-decimal list-inside ' {...props}></ol>
@@ -166,9 +162,9 @@ const CodeGeneration = ({setOpen, setRoute, refetchCredit}: Props) => {
         {
           item.role === "assistant" && (
             <button className=' p-1 border border-black dark:border-white absolute left-5 top-20'
-            onClick={() => copyText() }
+            onClick={() => copyText(item?.content) }
           >
-            <PencilIcon size={15} className=' text-black dark:text-white' />
+            <Copy size={15} className=' text-black dark:text-white' />
           </button>
           )
         }

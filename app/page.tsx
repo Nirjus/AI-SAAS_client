@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import Hero from "./components/Route/Hero";
 import Feateare from "./components/Route/Feateare"
 import Footer from "./components/footer/footer";
+import Statistics from "./components/Route/Statistics"
 type Props = {};
 
 const Page: FC<Props> = ({}) => {
@@ -34,6 +35,9 @@ const Page: FC<Props> = ({}) => {
      <br />
      <Feateare />
      <br />
+     <br />
+     <br />
+     <Statistics />
      <br />
      <Footer />
     </div>

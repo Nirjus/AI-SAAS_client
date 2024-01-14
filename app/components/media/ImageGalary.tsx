@@ -1,9 +1,10 @@
-import {  Download, Eye, Heart, X } from 'lucide-react';
+import {  Download, Eye, Heart, Search, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import FileSaver from "file-saver";
 import { useGetAllImagesQuery } from '@/redux/features/image/imageApi';
 import toast from 'react-hot-toast';
+import { style } from '@/app/styles/style';
 
 type Props = {}
 interface IImageProps {
@@ -18,11 +19,29 @@ const ImageGalary = (props: Props) => {
  
   const [visible, setVisible] = useState(false);
   const [imgUri1, setImgUr1] = useState("");
-  const [vusial, setVusial] = useState([]);
+  const [vusial, setVusial] = useState<any>([]);
+  const [searchData, setSearchData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [select, setSelect] = useState(false);
+  const [object, setObject] = useState<any>([]);
   const { data, refetch,error } = useGetAllImagesQuery(
     {},
     { refetchOnMountOrArgChange: true }
   );
+   const handleSearchChange = (e:any) => {
+     const term = e.target.value;
+     term === "" ? setSelect(false) : setSelect(true);
+     setSearchTerm(term);
+       const filteredData = data && data?.images.filter((img:any) => 
+          img.prompt.toLowerCase().includes(term.toLowerCase())
+       );
+       setSearchData(filteredData);
+   }
+   const handleSelect = (data:any) => {
+    setObject([data]);
+     setSearchTerm(data?.prompt);
+     setSelect(false);
+   }
   useEffect(() => {
     if (error) {
       if ("data" in error) {
@@ -41,16 +60,16 @@ const ImageGalary = (props: Props) => {
         <h1 className=' text-[25px] font-Poppins font-bold text-black dark:text-white underline pb-2'>Best AI Generated Images</h1>
         <p className=' text-[16px] font-Poppins font-semibold text-black dark:text-white'> Generative AI Minjurney, Dall-E</p>
         </div>
-        <div className=' 800px:flex justify-between'>
+        <div className=' 800px:flex justify-evenly'>
         <div className=" h-fit w-fit  800px:p-8 p-3 mt-5 rounded-[30px] bg-[#cacaca47] dark:bg-[#0000005e] ">
           <p className=" py-4 800px:text-[21px] text-[18px] font-Poppins font-semibold text-black dark:text-white">
             List of images you generated
           </p>
-          <div className=" w-full max-h-[400px] overflow-y-scroll ">
+          <div className=" w-full max-h-[600px] overflow-y-scroll ">
             {vusial &&
               vusial.map((img: any, index: number) => (
                 <div className=" w-full mt-7 " key={index}>
-                  <p className=" pl-5 font-semibold text-[#ea3c76] dark:text-[#3faceb]">
+                  <p className=" font-semibold break-words w-full text-[#ea3c76] dark:text-[#3faceb]">
                     {img.prompt}
                   </p>
                   <div className=" flex gap-2 flex-wrap">
@@ -68,13 +87,40 @@ const ImageGalary = (props: Props) => {
           </div>
 
       </div>
-      <div className=' border-2 w-fit h-fit border-[#89898988] rounded-[px] 800px:p-10 p-5'>
-           <p className=' text-center font-Poppins 800px:text-[35px] text-[25px] font-extrabold dark:text-white text-fuchsia-800'>
-               {vusial.length !== 0 ? vusial.length : 0}
+      <div className=' mt-5  max-800px:flex justify-between'>
+         <div className=' border-2 w-fit h-fit border-[#89898988]  800px:p-8 p-4 rounded-[5px]'>
+         <p className=' text-center font-Poppins 800px:text-[35px] text-[25px] font-extrabold dark:text-white text-fuchsia-800'>
+               {data?.images.length !== 0 ? data?.images.length : 0}
            </p>
            <p className=' text-center font-Poppins 800px:text-[25px] text-[20px] font-extrabold dark:text-white text-green-700'>
             Total generation
            </p>
+         </div>
+         <div className=' my-[25px] relative'>
+             <div className=' flex items-center '>
+              <input type="text" name=""
+               placeholder='Search images..'
+               value={searchTerm}
+               onChange={handleSearchChange} 
+               id="" className={`${style.input} dark:!bg-[#1f093d] !w-full`} />
+              <button className='border border-[#8b8b8b8e] p-3 rounded-[5px] active:dark:bg-slate-900 active:bg-slate-200'
+              onClick={() => setVusial(object)}
+              ><Search /></button>
+             </div>
+             {
+               select && searchData && searchData.length !== 0 && (
+                <div className=' shadow absolute left-0 top-14 h-auto max-h-[300px] overflow-y-scroll w-full'>
+                   {
+                    searchData && searchData.map((data:any) => (
+                      <div key={data._id} className=' dark:!bg-[#1f093d] border-b border-b-black dark:border-b-white p-2 bg-slate-200'>
+                     <p onClick={() => handleSelect(data)} className=' cursor-pointer'>{data.prompt}</p>
+                      </div>
+                    ))
+                   }
+                </div>
+               )
+             }
+         </div>
       </div>
         </div>
         {visible && (
