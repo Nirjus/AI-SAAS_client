@@ -47,7 +47,7 @@ const Page = (props: Props) => {
         activeItem={activeItem}
       />
       <div className=" w-full h-screen flex m-auto">
-        <div className={`duration-500 transition-all ${openSideBar ? "1200px:w-[23%] 800px:w-[25%] w-[30%]" : "w-[60px]"}`}>
+        <div className={`duration-500 transition-all 1200px:w-[23%] 800px:w-[25%] max-800px:fixed ${openSideBar ? " w-[40%]" : "w-[60px]"}`}>
           <DashboardSidebar
             openSideBar={openSideBar}
             setOpenSideBar={setOpenSideBar}
@@ -59,7 +59,7 @@ const Page = (props: Props) => {
             isPro={isPro}
           />
         </div>
-        <div className={`duration-500 transition-all ${openSideBar ? "1200px:w-[77%] 800px:w-[75%] w-[70%]" : " w-full"}  `}>
+        <div className={`duration-500 transition-all 1200px:w-[77%] 800px:w-[75%] w-full  `}>
           
                 <Dashboard 
                 openSideBar={openSideBar}

@@ -17,7 +17,7 @@ type Props = {
 
 const Dashboard = ({refetchCredit,active, setActive, setOpen, setRoute}: Props) => {
   return (
-    <div className={`pt-[90px] p-10 h-screen overflow-y-scroll w-full `}>
+    <div className={`pt-[90px] p-10 pl-16 pr-2 h-screen overflow-y-scroll w-full `}>
         
       {
         active === 1 && (

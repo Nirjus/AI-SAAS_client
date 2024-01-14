@@ -82,7 +82,7 @@ const DashboardSidebar = ({
       className={`dark:bg-[#050237] flex flex-col justify-between bg-slate-200 pt-[90px] p-2 h-screen w-full`}
     >
       <div>
-      <div className=" flex justify-end ">
+      <div className=" flex justify-end 800px:hidden ">
         {openSideBar ? (
           <IoIosArrowBack
             size={25}
@@ -108,7 +108,7 @@ const DashboardSidebar = ({
             className=" w-10 h-10 object-contain"
           />
           <h1
-            className={`font-semibold font-Josefin max-400px:text-[6px] text-2xl ml-2 overflow-hidden  ${
+            className={`font-semibold font-Josefin max-400px:text-[10px] text-2xl ml-2 overflow-hidden  ${
               openSideBar ? " textComingAnimation" : " hidden"
             }`}
           >

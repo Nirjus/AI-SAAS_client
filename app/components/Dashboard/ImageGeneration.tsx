@@ -159,7 +159,7 @@ const ImageGeneration = ({ setOpen, setRoute, refetchCredit }: Props) => {
               alt="photo gallary"
               width={500}
               height={500}
-              className=" w-[300px] h-[300px] rotate-[30deg] object-contain"
+              className=" w-[300px] h-[300px] object-contain"
             />
             <p className=" dark:text-white text-black tracking-widest font-semibold ">
               No image generating

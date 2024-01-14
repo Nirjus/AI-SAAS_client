@@ -146,7 +146,7 @@ console.log(musicData?.output.url)
               alt="Girl standing"
               width={500}
               height={500}
-              className=" w-[300px] h-[300px] object-contain"
+              className=" w-[200px] h-[200px] object-contain"
             />
             <p className=" dark:text-white text-black tracking-widest font-semibold ">
               No music generating

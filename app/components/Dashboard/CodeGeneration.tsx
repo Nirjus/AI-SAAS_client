@@ -122,7 +122,7 @@ const CodeGeneration = ({setOpen, setRoute, refetchCredit}: Props) => {
               alt="chats"
               width={500}
               height={500}
-              className=" w-[300px] h-[300px] object-contain -rotate-12"
+              className=" w-[300px] h-[300px] object-contain"
             />
             <p className=" dark:text-white text-black tracking-widest font-semibold ">
               No Code generating
