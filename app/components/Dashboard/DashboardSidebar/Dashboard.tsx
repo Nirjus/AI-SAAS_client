@@ -5,7 +5,7 @@ import MusicGeneration from "../MusicGeneration"
 import VideoGeneration from "../VideoGeneration"
 import ImageGeneration from "../ImageGeneration"
 import CodeGeneration from "../CodeGeneration"
-import SettingsPage from "../SettingsPage";
+import UsesPage from "../UsesPage"
 type Props = {
     openSideBar: boolean;
     active: number;
@@ -16,6 +16,8 @@ type Props = {
 }
 
 const Dashboard = ({refetchCredit,active, setActive, setOpen, setRoute}: Props) => {
+ 
+
   return (
     <div className={`pt-[90px] p-10 pl-16 pr-2 h-screen overflow-y-scroll w-full `}>
         
@@ -50,7 +52,7 @@ const Dashboard = ({refetchCredit,active, setActive, setOpen, setRoute}: Props) 
       }
       {
         active === 7 && (
-           <SettingsPage  />
+           <UsesPage />
         )
       }
     </div>

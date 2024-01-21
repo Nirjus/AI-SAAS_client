@@ -72,7 +72,7 @@ const Conversation = ({setOpen, setRoute, refetchCredit}: Props) => {
       const textToCopy = text;
       if(textToCopy){
       await navigator.clipboard.writeText(textToCopy);
-      alert('Text copied to clipboard!');
+    toast.success('Text copied to clipboard!');
       }else{
         console.warn('Text element is null or empty');
       }

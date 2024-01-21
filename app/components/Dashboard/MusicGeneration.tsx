@@ -45,7 +45,7 @@ const MusicGeneration = ({ setOpen, setRoute,refetchCredit }: Props) => {
       });
     }
   };
-console.log(musicData?.output.url)
+
   useEffect(() => {
     if (isSuccess) {
       refetch();

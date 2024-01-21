@@ -61,6 +61,10 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
       url: "/mymedia",
     },
     {
+      name: "Settings",
+      url: "/settings",
+    },
+    {
       name: "FAQ",
       url: "/faq",
     },
@@ -165,6 +169,7 @@ const Navbar = ({ activeItem, setActiveItem , open, setOpen, route, setRoute}: P
               )
             }
               </div>
+              <p className=" text-center dark:text-white text-black text-sm font-Poppins">Copyrtight © 2024 AI Studio </p>
             </div>
           </div>
         )}

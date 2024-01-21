@@ -1,14 +1,15 @@
 import DashboardHeading from '@/app/utils/DashboardHeading'
-import { useCheckSubscriptionQuery, useCreateCheckoutQuery } from '@/redux/features/subscription/subscriptionApi'
-import { Settings, Zap } from 'lucide-react'
+import {  useCreateCheckoutQuery } from '@/redux/features/subscription/subscriptionApi'
+import { Settings, Verified, Zap } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
-type Props = {}
+type Props = {
+  isPro: boolean;
+}
 
-const SettingsPage = (props: Props) => {
-    const [isPro, setIsPro] = useState(false);
-    const {data: validity} = useCheckSubscriptionQuery({});
+const SettingsPage = ({isPro}: Props) => {
+    
     const [loading, setLoading] = useState(true);
 
     const {isSuccess,data, error} = useCreateCheckoutQuery(undefined,{
@@ -28,10 +29,7 @@ const SettingsPage = (props: Props) => {
               toast.error(errorData.data.message);
             }
           }
-       if(validity){
-        setIsPro(validity?.isValid);
-       }
-     },[validity, isSuccess, error, data])
+     },[ isSuccess, error, data])
   return (
     <div>
          <DashboardHeading
@@ -46,7 +44,7 @@ const SettingsPage = (props: Props) => {
          <div className=' border p-2 border-[#87878782]'>
             <p className=' 800px:text-[20px] text-[16px] font-Poppins font-semibold text-black dark:text-white'>
               {
-                isPro ? "You are currently on a Pro plan" : "You are currently on free plan"
+                isPro ? <p className=' flex gap-2 items-center'>You are currently on a Pro plan <Verified fill='blue' className=' text-white' /></p> : "You are currently on free plan"
               }
               </p>
          </div>

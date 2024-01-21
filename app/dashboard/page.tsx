@@ -47,7 +47,7 @@ const Page = (props: Props) => {
         activeItem={activeItem}
       />
       <div className=" w-full h-screen flex m-auto">
-        <div className={`duration-500 transition-all 1200px:w-[23%] 800px:w-[25%] max-800px:fixed ${openSideBar ? " w-[40%]" : "w-[60px]"}`}>
+        <div className={`duration-500 z-50 transition-all 1200px:w-[23%] 800px:w-[25%] max-800px:fixed ${openSideBar ? " w-[40%]" : "w-[60px]"}`}>
           <DashboardSidebar
             openSideBar={openSideBar}
             setOpenSideBar={setOpenSideBar}

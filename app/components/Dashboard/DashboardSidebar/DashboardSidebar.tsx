@@ -1,10 +1,10 @@
 import {
+  BarChartBig,
   Code2Icon,
   ImageIcon,
   LayoutDashboard,
   MessageSquareDotIcon,
   Music4Icon,
-  Settings,
   VideoIcon,
 } from "lucide-react";
 import Image from "next/image";
@@ -61,8 +61,8 @@ const routes = [
     color: "text-yellow-500",
   },
   {
-    label: "Settings",
-    icon: Settings,
+    label: "Usage",
+    icon: BarChartBig,
     active: 7,
     color: " text-red-500",
   },

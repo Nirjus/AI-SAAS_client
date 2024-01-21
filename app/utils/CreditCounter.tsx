@@ -29,7 +29,7 @@ const CreditCounter = ({ credit = 0, isPro,openSideBar, setOpen, setRoute }: Pro
   }
   return (
     <div className=" px-[2px]">
-      <div className=" dark:bg-white/10 bg-white rounded-[5px]">
+      <div className=" dark:bg-white/10 bg-[#efefef] rounded-[5px]">
         <div className=" py-6">
           <div
             className={`text-center text-sm mb-4 ${
