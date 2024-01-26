@@ -24,7 +24,7 @@ function useChatScroll<T>(dep: T): React.MutableRefObject<HTMLDivElement> {
   return ref;
 }
 export const CrispChat = ({userId}: ChatMsg) => {
-  const socket = useMemo(() => io("https://socket-server-ai-studio.vercel.app"),[]);
+  const socket = useMemo(() => io("https://saas-socket.onrender.com"),[]);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Msg[]>([]); 
   const [room, setRoom] = useState(userId);
