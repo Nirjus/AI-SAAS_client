@@ -30,7 +30,7 @@ function useChatScroll<T>(dep: T): React.MutableRefObject<HTMLDivElement> {
   return ref;
 }
 export const AdminMsgList = ({userId, userName, userAvatar}: AdminMsg) => {
-  const socket = useMemo(() => io("http://localhost:8000"),[]);
+  const socket = useMemo(() => io("https://socket-server-ai-studio.vercel.app"),[]);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Msg[]>([]); 
   const room =  userId;
