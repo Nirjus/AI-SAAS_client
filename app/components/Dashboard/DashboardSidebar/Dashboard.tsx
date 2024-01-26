@@ -6,6 +6,7 @@ import VideoGeneration from "../VideoGeneration"
 import ImageGeneration from "../ImageGeneration"
 import CodeGeneration from "../CodeGeneration"
 import UsesPage from "../UsesPage"
+import { useGenerateCountQuery, useMothlyGenerationQuery } from '@/redux/features/analytics/nalytics'
 type Props = {
     openSideBar: boolean;
     active: number;
@@ -17,6 +18,8 @@ type Props = {
 
 const Dashboard = ({refetchCredit,active, setActive, setOpen, setRoute}: Props) => {
  
+  const {data, refetch, isLoading } = useGenerateCountQuery({}, {refetchOnMountOrArgChange:true});
+  const {data:monthlyData, refetch:monthlyDataRefetch, isLoading:monthlyLoading} = useMothlyGenerationQuery({},{refetchOnMountOrArgChange:true});
 
   return (
     <div className={`pt-[90px] p-10 pl-16 pr-2 h-screen overflow-y-scroll w-full `}>
@@ -52,7 +55,7 @@ const Dashboard = ({refetchCredit,active, setActive, setOpen, setRoute}: Props) 
       }
       {
         active === 7 && (
-           <UsesPage />
+           <UsesPage data={data} refetch={refetch} isLoading={isLoading} monthlyData={monthlyData} monthlyDataRefetch={monthlyDataRefetch} monthlyLoading={monthlyLoading} />
         )
       }
     </div>

@@ -9,7 +9,7 @@ type Props = {
 const UserGenerationChart = ({items}: Props) => {
     let totalNumber:number = items.map((i:any) => i.itemNumber).reduce((a:any,b:any) => a+b,0);
     const getArcLabel = (params: DefaultizedPieValueType) => {
-        const percent = params.value / totalNumber;
+        const percent = totalNumber !== 0 ? (params.value / totalNumber) : 0;
         return `${(percent * 100).toFixed(0)}%`;
       };
       const item = items && items.map((i:any, index:number) => ({
@@ -34,7 +34,7 @@ const UserGenerationChart = ({items}: Props) => {
       ]}
       sx={{
         [`& .${pieArcLabelClasses.root}`]: {
-          fill: 'white',
+          fill: "MenuText",
           fontSize: 14,
         },
       }}

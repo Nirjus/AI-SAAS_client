@@ -80,7 +80,7 @@ const Conversation = ({setOpen, setRoute, refetchCredit}: Props) => {
       console.error('Unable to copy text to clipboard', error);
     }
   }
-  console.log(conversation)
+ 
   return (
     <div>
         <DashboardHeading

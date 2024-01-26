@@ -56,6 +56,20 @@ export const userApi = apiSlice.injectEndpoints({
                 credentials: "include" as const
             })
         }),
+        getAllUser: builder.query({
+            query: () => ({
+                url: "user/get-allUser",
+                method: "GET",
+                credentials: "include" as const
+            })
+        }),
+        userDeleteByAdmin: builder.mutation({
+            query: (id) => ({
+                url: `user/delete-user/${id}`,
+                method: "DELETE",
+                credentials: "include" as const
+            })
+        }),
     })
 })
 export const {
@@ -64,5 +78,7 @@ export const {
   useResetPasswordMutation,
   useUpdatePasswordMutation,
   useDeleteUserMutation,
-  useGetCreditCountQuery
+  useGetCreditCountQuery,
+  useGetAllUserQuery,
+  useUserDeleteByAdminMutation,
 } = userApi

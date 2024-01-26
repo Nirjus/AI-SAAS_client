@@ -16,7 +16,14 @@ export const subscriptionApi = apiSlice.injectEndpoints({
                 credentials: "include" as const
             })
         }),
+        getAllSubscribers: builder.query({
+            query: () => ({
+                url: "subscription/get-all-subscribers",
+                method: "GET",
+                credentials: "include" as const
+            })
+        }),
     })
 })
 
-export const {  useCreateCheckoutQuery, useCheckSubscriptionQuery } = subscriptionApi
+export const {  useCreateCheckoutQuery, useCheckSubscriptionQuery, useGetAllSubscribersQuery } = subscriptionApi

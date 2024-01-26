@@ -5,7 +5,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { MdLogout, MdOutlinePersonRemove, MdOutlineSubscriptions } from "react-icons/md";
 import {HiOutlineSaveAs} from "react-icons/hi";
 import Link from "next/link";
-import { Undo2 } from "lucide-react";
+import { ShieldCheck, Undo2 } from "lucide-react";
 
 type Props = {
   user: any;
@@ -16,7 +16,7 @@ type Props = {
 };
 
 const SidebarProfile = ({ user, active, setActive, setOpen }: Props) => {
- 
+
   return (
     <div className=" w-full h-full font-Poppins bg-white dark:bg-[#290329] border border-[#8382827b]">
       <div
@@ -38,7 +38,7 @@ const SidebarProfile = ({ user, active, setActive, setOpen }: Props) => {
           height={500}
           className=" w-10 h-10 rounded-full object-cover"
         />
-        <p className=" text-black dark:text-white font-[600] 800px:block hidden text-[20px]">
+        <p className=" text-black dark:text-white 800px:block hidden text-[20px]">
           {user?.name}
         </p>
       </div>
@@ -49,7 +49,7 @@ const SidebarProfile = ({ user, active, setActive, setOpen }: Props) => {
         onClick={() => setActive(2)}
       >
         <RiLockPasswordLine size={30} className=" text-[#3cd649] " />
-        <p className=" text-black dark:text-white font-[600] 800px:block hidden text-[18px]">
+        <p className=" text-black dark:text-white 800px:block hidden text-[18px]">
           Change Password
         </p>
       </div>
@@ -60,7 +60,7 @@ const SidebarProfile = ({ user, active, setActive, setOpen }: Props) => {
         onClick={() => setActive(3)}
       >
         <MdOutlineSubscriptions size={30} className=" text-[#22b3ed] " />
-        <p className=" text-black dark:text-white font-[600] 800px:block hidden text-[18px]">
+        <p className=" text-black dark:text-white  800px:block hidden text-[18px]">
           Subscription
         </p>
       </div>
@@ -71,10 +71,25 @@ const SidebarProfile = ({ user, active, setActive, setOpen }: Props) => {
         onClick={() => setActive(4)}
       >
         <HiOutlineSaveAs size={30} className=" text-[#c92abf] " />
-        <p className=" text-black dark:text-white font-[600] 800px:block hidden text-[18px]">
+        <p className=" text-black dark:text-white  800px:block hidden text-[18px]">
           Save Items
         </p>
       </div>
+     {
+      user.role === "Admin" && (
+        <Link href={"/admin"}
+        className={`flex p-2 items-center gap-3 cursor-pointer rounded ${
+          active === 7 ? "bg-[#0000002c] dark:bg-[#ffffff23]" : "bg-transparent"
+        }`}
+        onClick={() => setActive(7)}
+      >
+        <ShieldCheck size={30} className=" text-[#2de9e3] " />
+        <p className=" text-black dark:text-white  800px:block hidden text-[18px]">
+          Admin Pannel
+        </p>
+      </Link>
+      )
+     }
       <Link
       href={"/"}
         className={`flex p-2 items-center gap-3 cursor-pointer rounded ${
@@ -82,7 +97,7 @@ const SidebarProfile = ({ user, active, setActive, setOpen }: Props) => {
         }`}
       >
         <Undo2 size={30} className=" text-[#df6478]" />
-        <p className=" text-black dark:text-white font-[600] 800px:block hidden text-[18px]">
+        <p className=" text-black dark:text-white 800px:block hidden text-[18px]">
           Return
         </p>
       </Link>
@@ -93,7 +108,7 @@ const SidebarProfile = ({ user, active, setActive, setOpen }: Props) => {
         onClick={() => {setActive(6), setOpen(true)}}
       >
         <MdOutlinePersonRemove size={30} className=" text-[#9957e9]" />
-        <p className=" text-black dark:text-white font-[600] 800px:block hidden text-[18px]">
+        <p className=" text-black dark:text-white 800px:block hidden text-[18px]">
           Remove Account
         </p>
       </div>

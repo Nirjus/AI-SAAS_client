@@ -1,14 +1,19 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import { useGenerateCountQuery, useMothlyGenerationQuery } from '@/redux/features/analytics/nalytics';
 import UserGenerationChart from "../../components/Charts/UserGenerationChart"
 import User12monthGeneration from "../../components/Charts/User12monthGeneration"
 import Loader from '../Loader';
-type Props = {}
+type Props = {
+  data: any;
+  refetch: any;
+  isLoading: any;
+  monthlyDataRefetch:any
+  monthlyData: any;
+  monthlyLoading: any;
+}
 
-const UsesPage = ({}: Props) => {
-  const {data, refetch, isLoading } = useGenerateCountQuery({}, {refetchOnMountOrArgChange:true});
-  const {data:monthlyData, refetch:monthlyDataRefetch, isLoading:monthlyLoading} = useMothlyGenerationQuery({},{refetchOnMountOrArgChange:true});
+const UsesPage = ({data, monthlyData, isLoading, monthlyDataRefetch, refetch, monthlyLoading}: Props) => {
+  
   const [items, setItems] = useState([]);
   const [monthlyGeneration, setMonthlyGeneration] = useState([]);
   useEffect(() => {
