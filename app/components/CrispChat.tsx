@@ -1,6 +1,6 @@
 "use client"
 import { style } from '@/app/styles/style';
-import { useCreateMessageMutation, useGetMessageMutation } from '@/redux/features/messages/messageApi';
+import { useCreateMessageMutation, useGetMessageQuery } from '@/redux/features/messages/messageApi';
 import { MessagesSquare, UserCircle, X } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux';
@@ -24,12 +24,13 @@ function useChatScroll<T>(dep: T): React.MutableRefObject<HTMLDivElement> {
   return ref;
 }
 export const CrispChat = ({userId}: ChatMsg) => {
-  const socket = useMemo(() => io("https://saas-socket.onrender.com"),[]);
+  const url = process.env.NEXT_PUBLIC_SOCKET_URI!;
+  const socket = useMemo(() => io(url),[url]);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Msg[]>([]); 
-  const [room, setRoom] = useState(userId);
+  const room = userId;
   const [createMessage] = useCreateMessageMutation();
-  const [getMessage,{data}] = useGetMessageMutation();
+  const {data, refetch} = useGetMessageQuery(room, {refetchOnMountOrArgChange: true})
   const ref = useChatScroll(data?.messages);
  
   const messageSubmitHandler = (e:any) => {
@@ -40,6 +41,7 @@ export const CrispChat = ({userId}: ChatMsg) => {
   }
 
     useEffect(() => {
+      refetch();
       socket.emit("join_room", room);
       socket.on("receive_message", (data:any) => {
       setMessages([{role: "you", content:data.message}]);
@@ -53,14 +55,14 @@ export const CrispChat = ({userId}: ChatMsg) => {
         })
       }
       })
-       getMessage(room);
+    
         return () => {
           socket.on("disconnect",(arg) => {
             console.log(arg);
          });
     };
-   },[socket, messages, room, getMessage, createMessage])
-   console.log(data?.messages)
+   },[socket, messages, room, createMessage, refetch])
+   
  return (
   <div className=' z-10 w-fit p-5 rounded-[10px] dark:bg-slate-950 bg-slate-300 shadow-xl border border-[#90909084] fixed bottom-20 right-10'>
     <div className=' w-full p-2 bg-[#00000017] flex gap-2 items-end dark:bg-[#00000056] border rounded-lg border-[#92929287] '>

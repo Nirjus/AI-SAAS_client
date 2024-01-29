@@ -1,5 +1,6 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
+import axios from "axios";
 import Heading from "./utils/Heading";
 import Header from "./components/Header";
 import Hero from "./components/Route/Hero";
@@ -12,7 +13,14 @@ const Page: FC<Props> = ({}) => {
   const [activeItem, setActiveItem] = useState(0);
   const [open, setOpen] = useState(false);
   const [route, setRoute] = useState("Login");
+  const url = process.env.NEXT_PUBLIC_SOCKET_URI;
 
+  async function activeSocketServer() {
+       await axios.get(`${url}`)
+  }
+    useEffect(() => {
+      activeSocketServer();
+    })
   return (
     <div>
       <Heading

@@ -16,6 +16,7 @@
     "@mui/x-data-grid": "^6.19.1",
     "@reduxjs/toolkit": "^2.0.1",
     "@types/file-loader": "^5.0.4",
+    "axios": "^1.6.7",
     "crisp-sdk-web": "^1.0.21",
     "file-loader": "^6.2.0",
     "file-saver": "^2.0.5",

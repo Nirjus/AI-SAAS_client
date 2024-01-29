@@ -12,14 +12,15 @@ export const messageApi = apiSlice.injectEndpoints({
                 credentials: "include" as const
             })
         }),
-        getMessage: builder.mutation({
+        getMessage: builder.query({
             query: (id) => ({
-                url: `messages/getmsg/${id}`,
-                method: "POST",
+                url: `messages/getmsg`,
+                method: "GET",
+                params: {id},
                 credentials: "include" as const
             })
         }),
     })
 })
 
-export const {useCreateMessageMutation, useGetMessageMutation} = messageApi
+export const {useCreateMessageMutation, useGetMessageQuery} = messageApi

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import React, { useEffect, useMemo, useState } from 'react'
 import {io} from "socket.io-client";
 import img from "../../../public/images/avatar.png";
-import { useCreateMessageMutation, useGetMessageMutation } from '@/redux/features/messages/messageApi';
+import { useCreateMessageMutation, useGetMessageQuery,  } from '@/redux/features/messages/messageApi';
 import { format } from 'timeago.js';
 
 type Props = {
@@ -30,14 +30,15 @@ function useChatScroll<T>(dep: T): React.MutableRefObject<HTMLDivElement> {
   return ref;
 }
 export const AdminMsgList = ({userId, userName, userAvatar}: AdminMsg) => {
-  const socket = useMemo(() => io("https://saas-socket.onrender.com"),[]);
+  const url = process.env.NEXT_PUBLIC_SOCKET_URI!;
+  const socket = useMemo(() => io(url),[url]);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Msg[]>([]); 
   const room =  userId;
   const usrName = userName;   
   const usrAvatar = userAvatar;
   const [createMessage] = useCreateMessageMutation();
-  const [getMessage,{data}] = useGetMessageMutation();
+  const {data, refetch} = useGetMessageQuery(room,{refetchOnMountOrArgChange:true});
   const ref = useChatScroll(data?.messages);
 
   const messageSubmitHandler = (e:any) => {
@@ -48,6 +49,7 @@ export const AdminMsgList = ({userId, userName, userAvatar}: AdminMsg) => {
     }
 
     useEffect(() => {
+     refetch();
        socket.emit("join_room", room);
         socket.on("receive_message", (data:any) => {
         setMessages([ {role: "you", content:data.message}]);
@@ -62,14 +64,13 @@ export const AdminMsgList = ({userId, userName, userAvatar}: AdminMsg) => {
         }
         })
     
-        getMessage(room);
          return () => {
           socket.on("disconnect",(arg) => {
              console.log(arg);
           });
         }
-     },[socket, messages, room, createMessage,getMessage])
-    
+     },[socket, messages, room, createMessage, refetch])
+     
   return(
     <div className=' z-10 p-3 w-fit 800px:m-5 m-1 rounded-[10px] dark:bg-slate-900 bg-slate-300 shadow-xl border border-[#90909084]'>
       <div className=' w-full p-1 rounded-lg dark:bg-[#00000058] bg-[#0000001b] border border-[#8a8a8a83] flex gap-2 items-end'>
@@ -132,6 +133,7 @@ export const AdminMsgList = ({userId, userName, userAvatar}: AdminMsg) => {
 const AdminAllMessages = ({item}: Props) => {
 
      const [selectUser, setSelectUser] = useState<any>(null);
+     const [click, setClick] = useState("");
 
      const onclickHandler = (user:any) => {
      setSelectUser({
@@ -139,6 +141,7 @@ const AdminAllMessages = ({item}: Props) => {
       userName: user?.name,
       userAvatar: user?.avatar?.url ? user?.avatar?.url : user?.socialAvatar ? user?.socialAvatar : img
      })
+     setClick(user?._id);
      }
    
 
@@ -147,9 +150,9 @@ const AdminAllMessages = ({item}: Props) => {
       <div className=' w-fit h-fit flex 800px:flex-col flex-row gap-2 m-3 p-2 rounded-lg bg-slate-300 shadow-xl border border-[#90909084] dark:bg-slate-900 '>
         {
           item && item.map((user:any, index:number) => (
-             <div key={index} className=' cursor-pointer' onClick={() => onclickHandler(user)}>
+             <div key={index} className={`cursor-pointer ${click === user?._id && "border-2 border-[#15b8ef] rounded-full p-[2px]"}`} onClick={() => onclickHandler(user)}>
                <Image src={user?.avatar?.url ? user?.avatar.url : user?.socialAvatar ? user?.socialAvatar : img} alt='avatar'
-               width={500} height={500} className=' w-12 h-12 rounded-full object-cover'
+               width={500} height={500} className=' w-11 h-11 rounded-full object-cover'
                />
              </div>
           ))
