@@ -3,7 +3,8 @@ import './globals.css'
 import { ThemeProvider } from 'next-themes'
 import  {Poppins} from "next/font/google"
 import { Josefin_Sans } from 'next/font/google'
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
+import axios from "axios";
 import { Toaster } from 'react-hot-toast'
 import { SessionProvider } from 'next-auth/react'
 import CrispProvider from './components/CrispChat'
@@ -26,6 +27,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const url = process.env.NEXT_PUBLIC_SOCKET_URI;
+
+  async function activeSocketServer() {
+     await axios.get(`${url}`)
+  }
+    useEffect(() => {
+     activeSocketServer();
+    })
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={`${poppins.variable} ${josefin.variable} !bg-white bg-no-repeat dark:bg-gradient-to-b dark:from-[#1b0827f3] dark:to-[#000000] duration-300`}>
