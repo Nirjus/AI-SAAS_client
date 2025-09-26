@@ -12,6 +12,7 @@ import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useCheckSubscriptionQuery } from "@/redux/features/subscription/subscriptionApi";
 import { redirect } from "next/navigation";
+import CrispProvider from "../CrispChat";
 
 type Props = {
   user: any;
@@ -97,6 +98,7 @@ const Profile = ({ user }: Props) => {
           </>
         )}
       </div>
+      <CrispProvider />
     </div>
   );
 };

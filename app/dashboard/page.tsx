@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Heading from "../utils/Heading";
 import Header from "../components/Header";
 import DashboardSidebar from "../components/Dashboard/DashboardSidebar/DashboardSidebar";
-import Dashboard from "../components/Dashboard/DashboardSidebar/Dashboard"
+import Dashboard from "../components/Dashboard/DashboardSidebar/Dashboard";
 import { useGetCreditCountQuery } from "@/redux/features/user/userApi";
 import CustomModal from "../utils/CustomModal";
 import Promodal from "../components/Subscription/pro-modal";
@@ -19,70 +19,73 @@ const Page = (props: Props) => {
   const [openSideBar, setOpenSideBar] = useState(true);
   const [active, setActive] = useState(1);
   const [isPro, setIsPro] = useState(false);
-  const {data,isSuccess, refetch} = useGetCreditCountQuery({},{refetchOnMountOrArgChange: true})
+  const { data, isSuccess, refetch } = useGetCreditCountQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
 
-  const {data: validity} = useCheckSubscriptionQuery({});
+  const { data: validity } = useCheckSubscriptionQuery({});
   useEffect(() => {
-    if(isSuccess){
+    if (isSuccess) {
       refetch();
     }
-    if(validity){
+    if (validity) {
       setIsPro(validity?.isValid);
-     }
-  },[isSuccess, refetch, validity,data])
+    }
+  }, [isSuccess, refetch, validity, data]);
 
   return (
     <div>
-      <Protected >
-      <Heading
-        title="AI Studio - Dashboard"
-        description="Make next level Ai Generated Images, text, code snippets"
-        keyword="ChatGpt, Ai tools, Image Generation"
-      />
-      <Header
-        open={open}
-        setOpen={setOpen}
-        route={route}
-        setRoute={setRoute}
-        activeItem={activeItem}
-      />
-      <div className=" w-full h-screen flex m-auto">
-        <div className={`duration-500 z-50 transition-all 1200px:w-[23%] 800px:w-[25%] max-800px:fixed ${openSideBar ? " w-[40%]" : "w-[60px]"}`}>
-          <DashboardSidebar
-            openSideBar={openSideBar}
-            setOpenSideBar={setOpenSideBar}
-            active={active}
-            setActive={setActive}
-            credits={data?.credit}
-            setOpen={setOpen}
-            setRoute={setRoute}
-            isPro={isPro}
-          />
+      <Protected>
+        <Heading
+          title="AI Studio - Dashboard"
+          description="Make next level Ai Generated Images, text, code snippets"
+          keyword="ChatGpt, Ai tools, Image Generation"
+        />
+        <Header
+          open={open}
+          setOpen={setOpen}
+          route={route}
+          setRoute={setRoute}
+          activeItem={activeItem}
+        />
+        <div className=" w-full h-screen flex m-auto">
+          <div
+            className={`duration-500 z-50 transition-all 1200px:w-[23%] 800px:w-[25%] max-800px:fixed ${
+              openSideBar ? " w-[40%]" : "w-[60px]"
+            }`}
+          >
+            <DashboardSidebar
+              openSideBar={openSideBar}
+              setOpenSideBar={setOpenSideBar}
+              active={active}
+              setActive={setActive}
+              credits={data?.credit}
+              setOpen={setOpen}
+              setRoute={setRoute}
+              isPro={isPro}
+            />
+          </div>
+          <div
+            className={`duration-500 transition-all 1200px:w-[77%] 800px:w-[75%] w-full  `}
+          >
+            <Dashboard
+              openSideBar={openSideBar}
+              active={active}
+              setActive={setActive}
+              setOpen={setOpen}
+              setRoute={setRoute}
+              refetchCredit={refetch}
+            />
+          </div>
         </div>
-        <div className={`duration-500 transition-all 1200px:w-[77%] 800px:w-[75%] w-full  `}>
-          
-                <Dashboard 
-                openSideBar={openSideBar}
-                active={active}
-                setActive={setActive}
-                setOpen={setOpen}
-                setRoute={setRoute}
-                refetchCredit={refetch}
-                />
-          
-        </div>
-      </div>
-      {
-        open && !isPro && (
+        {open && !isPro && (
           <>
-          {
-            route === "pro-modal" && (
+            {route === "pro-modal" && (
               <CustomModal open={open} setOpen={setOpen} component={Promodal} />
-            )
-          }
+            )}
           </>
-        )
-      }
+        )}
       </Protected>
     </div>
   );

@@ -3,11 +3,11 @@ import { apiSlice } from "../api/apiSlice";
 export const messageApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         createMessage: builder.mutation({
-            query: ({id, role, content}) => ({
+            query: ({from, to, content}) => ({
                 url: "messages/create",
                 method: "POST",
                 body:{
-                   id, role, content
+                  from, to, content
                 },
                 credentials: "include" as const
             })
