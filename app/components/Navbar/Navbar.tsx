@@ -18,9 +18,20 @@ import { LogOut, User2 } from "lucide-react";
 type Props = {
   activeItem: number;
   open: boolean;
+  setActiveItem: (activeItem: boolean) => void;
+  setOpen: (open: boolean) => void;
+  route: any;
+  setRoute: (route: any) => void;
 };
 
-const Navbar = ({ activeItem }: Props) => {
+const Navbar = ({
+  activeItem,
+  open,
+  setOpen,
+  setActiveItem,
+  setRoute,
+  route,
+}: Props) => {
   const router = useRouter();
   const [openSideBar, setOpenSideBar] = useState(false);
   const [reverse, setReverse] = useState(false);
